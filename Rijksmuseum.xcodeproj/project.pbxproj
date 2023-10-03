@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		757CB0832ACC2C4F00C8BB1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0822ACC2C4F00C8BB1A /* AppDelegate.swift */; };
 		757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */; };
 		757CB0872ACC2C4F00C8BB1A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0862ACC2C4F00C8BB1A /* ViewController.swift */; };
 		757CB08A2ACC2C4F00C8BB1A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757CB0882ACC2C4F00C8BB1A /* Main.storyboard */; };
@@ -16,6 +15,7 @@
 		757CB09A2ACC2C5000C8BB1A /* RijksmuseumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0992ACC2C5000C8BB1A /* RijksmuseumTests.swift */; };
 		757CB0A42ACC2C5000C8BB1A /* RijksmuseumUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0A32ACC2C5000C8BB1A /* RijksmuseumUITests.swift */; };
 		757CB0A62ACC2C5000C8BB1A /* RijksmuseumUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0A52ACC2C5000C8BB1A /* RijksmuseumUITestsLaunchTests.swift */; };
+		757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		757CB07F2ACC2C4F00C8BB1A /* Rijksmuseum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rijksmuseum.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		757CB0822ACC2C4F00C8BB1A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		757CB0862ACC2C4F00C8BB1A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		757CB0892ACC2C4F00C8BB1A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -49,6 +48,8 @@
 		757CB09F2ACC2C5000C8BB1A /* RijksmuseumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RijksmuseumUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		757CB0A32ACC2C5000C8BB1A /* RijksmuseumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RijksmuseumUITests.swift; sourceTree = "<group>"; };
 		757CB0A52ACC2C5000C8BB1A /* RijksmuseumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RijksmuseumUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		757CB0B72ACC2EB200C8BB1A /* Rijksmuseum.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Rijksmuseum.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +80,7 @@
 		757CB0762ACC2C4F00C8BB1A = {
 			isa = PBXGroup;
 			children = (
+				757CB0B72ACC2EB200C8BB1A /* Rijksmuseum.xctestplan */,
 				757CB0812ACC2C4F00C8BB1A /* Rijksmuseum */,
 				757CB0982ACC2C5000C8BB1A /* RijksmuseumTests */,
 				757CB0A22ACC2C5000C8BB1A /* RijksmuseumUITests */,
@@ -99,12 +101,11 @@
 		757CB0812ACC2C4F00C8BB1A /* Rijksmuseum */ = {
 			isa = PBXGroup;
 			children = (
-				757CB0822ACC2C4F00C8BB1A /* AppDelegate.swift */,
+				757CB0B22ACC2D3B00C8BB1A /* Feed Feature */,
+				757CB0B42ACC2D8200C8BB1A /* UI */,
+				757CB0B32ACC2D6C00C8BB1A /* Resources */,
 				757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */,
-				757CB0862ACC2C4F00C8BB1A /* ViewController.swift */,
-				757CB0882ACC2C4F00C8BB1A /* Main.storyboard */,
-				757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */,
-				757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */,
+				757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */,
 				757CB0902ACC2C5000C8BB1A /* Info.plist */,
 			);
 			path = Rijksmuseum;
@@ -125,6 +126,31 @@
 				757CB0A52ACC2C5000C8BB1A /* RijksmuseumUITestsLaunchTests.swift */,
 			);
 			path = RijksmuseumUITests;
+			sourceTree = "<group>";
+		};
+		757CB0B22ACC2D3B00C8BB1A /* Feed Feature */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Feed Feature";
+			sourceTree = "<group>";
+		};
+		757CB0B32ACC2D6C00C8BB1A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */,
+				757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */,
+				757CB0882ACC2C4F00C8BB1A /* Main.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		757CB0B42ACC2D8200C8BB1A /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				757CB0862ACC2C4F00C8BB1A /* ViewController.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,8 +284,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */,
 				757CB0872ACC2C4F00C8BB1A /* ViewController.swift in Sources */,
-				757CB0832ACC2C4F00C8BB1A /* AppDelegate.swift in Sources */,
 				757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
