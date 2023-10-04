@@ -23,8 +23,7 @@ class RemoteFeedLoader {
 final class RemoteFeedLoaderTests: XCTestCase {
 
     func test_init_doesNotTriggerServiceRequest() {
-        let client = URLSessionHTTPClientSpy()
-        let sut = RemoteFeedLoader(client: client)
+        let (sut, client) = makeSUT()
         
         sut.load()
         
@@ -32,8 +31,20 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
     
     
+    // MARK: - Helpers
     
-    private class URLSessionHTTPClientSpy: HTTPClient {
+    private func makeSUT() -> (RemoteFeedLoader, HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteFeedLoader(client: client)
+        
+        trackForMemoryLeaks(client)
+        trackForMemoryLeaks(sut)
+        
+        return (sut, client)
+
+    }
+    
+    private class HTTPClientSpy: HTTPClient {
         var getCallCount = 0
         
         func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
