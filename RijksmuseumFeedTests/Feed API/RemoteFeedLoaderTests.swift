@@ -27,6 +27,8 @@ class RemoteFeedLoader {
 
 final class RemoteFeedLoaderTests: XCTestCase {
 
+    private let expectedLoadRequestUrl = URL(string: "https://www.rijksmuseum.nl/api/nl/collection")
+
     func test_init_doesNotTriggerServiceRequest() {
         let (_, client) = makeSUT()
         
@@ -38,8 +40,16 @@ final class RemoteFeedLoaderTests: XCTestCase {
 
         sut.load { _ in }
         
-        let expectedRequestPath = URL(string: "https://www.rijksmuseum.nl/api/nl/collection")
-        XCTAssertEqual(client.requestedPaths, [expectedRequestPath], "Expected to perform request on load call")
+        XCTAssertEqual(client.requestedPaths, [expectedLoadRequestUrl], "Expected to perform request on load call")
+    }
+
+    func test_loadTwice_requestsDataFromURLTwice() {
+        let (sut, client) = makeSUT()
+
+        sut.load { _ in }
+        sut.load { _ in }
+
+        XCTAssertEqual(client.requestedPaths, [expectedLoadRequestUrl, expectedLoadRequestUrl])
     }
 
     // MARK: - Helpers
