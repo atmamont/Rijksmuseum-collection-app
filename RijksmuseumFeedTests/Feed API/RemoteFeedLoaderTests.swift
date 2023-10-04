@@ -20,7 +20,12 @@ class RemoteFeedLoader {
     func load(completion: @escaping ((LoadFeedResult) -> Void)) {
         let requestUrl = baseUrl.appending(path: requestPath)
         client.get(from: requestUrl) { result in
-            
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                completion(.failure(error))
+            }
         }
     }
 }
@@ -40,7 +45,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
 
         sut.load { _ in }
         
-        XCTAssertEqual(client.requestedPaths, [expectedLoadRequestUrl], "Expected to perform request on load call")
+        XCTAssertEqual(client.requestedUrls, [expectedLoadRequestUrl], "Expected to perform request on load call")
     }
 
     func test_loadTwice_requestsDataFromURLTwice() {
@@ -49,7 +54,27 @@ final class RemoteFeedLoaderTests: XCTestCase {
         sut.load { _ in }
         sut.load { _ in }
 
-        XCTAssertEqual(client.requestedPaths, [expectedLoadRequestUrl, expectedLoadRequestUrl])
+        XCTAssertEqual(client.requestedUrls, [expectedLoadRequestUrl, expectedLoadRequestUrl])
+    }
+
+    func test_load_deliversErrorOnClientError() {
+        let (sut, client) = makeSUT()
+        let expectedError = NSError(domain: "any", code: 1)
+        let exp = expectation(description: "Waiting for load completion")
+
+        sut.load { result in
+            switch result {
+            case .success:
+                XCTFail("Expected to receive an error")
+            case let .failure(error):
+                XCTAssertEqual((error as NSError), expectedError)
+            }
+            exp.fulfill()
+        }
+        
+        client.completeWithError(expectedError)
+        wait(for: [exp], timeout: 1.0)
+
     }
 
     // MARK: - Helpers
@@ -66,12 +91,21 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
     
     private class HTTPClientSpy: HTTPClient {
-        var getCallCount = 0
-        var requestedPaths = [URL]()
+        typealias Completion = (HTTPClient.Result) -> Void
         
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        var getCallCount = 0
+        var recordedRequests = [(url: URL, completion: Completion)]()
+        var requestedUrls: [URL] {
+            recordedRequests.map { $0.url }
+        }
+        
+        func get(from url: URL, completion: @escaping Completion) {
             getCallCount += 1
-            requestedPaths.append(url)
+            recordedRequests.append((url, completion))
+        }
+        
+        func completeWithError(_ error: Error, at index: Int = 0) {
+            recordedRequests[index].completion(.failure(error))
         }
     }
 }
