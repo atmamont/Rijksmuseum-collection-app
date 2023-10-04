@@ -16,5 +16,5 @@ public struct FeedItem {
 public typealias LoadFeedResult = Result<[FeedItem], Error>
 
 public protocol FeedLoader {
-    func load() -> LoadFeedResult
+    func load(completion: @escaping ((LoadFeedResult) -> Void))
 }

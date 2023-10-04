@@ -10,27 +10,38 @@ import RijksmuseumFeed
 
 class RemoteFeedLoader {
     private let client: HTTPClient
+    private let baseUrl = URL(string: "https://www.rijksmuseum.nl")!
+    private let requestPath = "/api/nl/collection"
     
     init(client: HTTPClient) {
         self.client = client
     }
     
-    func load() {
-        
+    func load(completion: @escaping ((LoadFeedResult) -> Void)) {
+        let requestUrl = baseUrl.appending(path: requestPath)
+        client.get(from: requestUrl) { result in
+            
+        }
     }
 }
 
 final class RemoteFeedLoaderTests: XCTestCase {
 
     func test_init_doesNotTriggerServiceRequest() {
-        let (sut, client) = makeSUT()
-        
-        sut.load()
+        let (_, client) = makeSUT()
         
         XCTAssertEqual(client.getCallCount, 0)
     }
     
-    
+    func test_load_performsRequest() {
+        let (sut, client) = makeSUT()
+
+        sut.load { _ in }
+        
+        let expectedRequestPath = URL(string: "https://www.rijksmuseum.nl/api/nl/collection")
+        XCTAssertEqual(client.requestedPaths, [expectedRequestPath], "Expected to perform request on load call")
+    }
+
     // MARK: - Helpers
     
     private func makeSUT() -> (RemoteFeedLoader, HTTPClientSpy) {
@@ -46,9 +57,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     private class HTTPClientSpy: HTTPClient {
         var getCallCount = 0
+        var requestedPaths = [URL]()
         
         func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
             getCallCount += 1
+            requestedPaths.append(url)
         }
     }
 }
