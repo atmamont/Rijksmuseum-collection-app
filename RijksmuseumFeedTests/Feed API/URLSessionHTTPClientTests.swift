@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Rijksmuseum
+import RijksmuseumFeed
 
 class URLSessionHTTPClientTests: XCTestCase {
     

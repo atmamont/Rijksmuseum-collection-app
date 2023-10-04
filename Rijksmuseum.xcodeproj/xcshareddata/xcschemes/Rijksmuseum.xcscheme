@@ -56,6 +56,17 @@
                ReferencedContainer = "container:Rijksmuseum.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "756BB8352ACD596800807FF7"
+               BuildableName = "RijksmuseumFeedTests.xctest"
+               BlueprintName = "RijksmuseumFeedTests"
+               ReferencedContainer = "container:Rijksmuseum.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

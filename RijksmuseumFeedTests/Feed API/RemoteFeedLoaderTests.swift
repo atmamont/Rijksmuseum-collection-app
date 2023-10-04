@@ -1,12 +1,12 @@
 //
-//  RemoteFeedLoader.swift
+//  RemoteFeedLoaderTests.swift
 //  RijksmuseumTests
 //
 //  Created by Andrei on 03/10/2023.
 //
 
 import XCTest
-import Rijksmuseum
+import RijksmuseumFeed
 
 class RemoteFeedLoader {
     private let client: HTTPClient
@@ -30,6 +30,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         XCTAssertEqual(client.getCallCount, 0)
     }
+    
+    
     
     private class URLSessionHTTPClientSpy: HTTPClient {
         var getCallCount = 0

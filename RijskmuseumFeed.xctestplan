@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "7C7DFAA9-E696-48C2-8B0A-A8A94DC98868",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Rijksmuseum.xcodeproj",
+          "identifier" : "756BB82E2ACD596800807FF7",
+          "name" : "RijskmuseumFeed"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Rijksmuseum.xcodeproj",
+        "identifier" : "756BB8352ACD596800807FF7",
+        "name" : "RijskmuseumFeedTests"
+      }
+    }
+  ],
+  "version" : 1
+}
