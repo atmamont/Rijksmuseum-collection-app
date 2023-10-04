@@ -1,0 +1,6 @@
+.secrets
+*.xcuserstate
+*.xcuserdatad
+*.dtmp
+*.bkp
+DevSecrets.xcconfig
