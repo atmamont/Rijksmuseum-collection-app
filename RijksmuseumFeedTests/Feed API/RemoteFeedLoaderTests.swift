@@ -7,11 +7,29 @@
 
 import XCTest
 import RijksmuseumFeed
+import Foundation
+
+struct RemoteFeedItem: Decodable {
+    let id: UUID
+    let title: String
+    let longTitle: String
+    let principalOrFirstMaker: String
+    let webImage: RemoteImage
+    let headerImage: RemoteImage
+}
+
+struct RemoteImage: Decodable {
+    let url: URL
+}
 
 class RemoteFeedLoader {
     private let client: HTTPClient
     private let baseUrl = URL(string: "https://www.rijksmuseum.nl")!
     private let requestPath = "/api/nl/collection"
+    
+    enum Error: Swift.Error {
+        case invalidData
+    }
     
     init(client: HTTPClient) {
         self.client = client
@@ -21,12 +39,49 @@ class RemoteFeedLoader {
         let requestUrl = baseUrl.appending(path: requestPath)
         client.get(from: requestUrl) { result in
             switch result {
-            case .success:
-                break
+            case let .success((remoteData, response)):
+                completion(RemoteFeedLoader.map(remoteData, from: response))
             case let .failure(error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> LoadFeedResult {
+        do {
+            let items = try RemoteFeedItemsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
+extension Array where Element == RemoteFeedItem {
+    func toModels() -> [FeedItem] {
+        map {
+            FeedItem(
+                id: $0.id,
+                title: $0.title,
+                imageUrl: $0.headerImage.url)
+        }
+    }
+}
+
+internal final class RemoteFeedItemsMapper {
+    private struct Root: Decodable {
+        let artObjects: [RemoteFeedItem]
+    }
+    
+    private static var OK_200: Int { return 200 }
+    
+    static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedItem] {
+        guard response.statusCode == OK_200,
+            let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteFeedLoader.Error.invalidData
+        }
+
+        return root.artObjects
     }
 }
 
@@ -74,7 +129,26 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         client.completeWithError(expectedError)
         wait(for: [exp], timeout: 1.0)
+    }
 
+    func test_load_deliversEmptyFeedWhenReceivingEpmtyResponseOnSuccess() {
+        let (sut, client) = makeSUT()
+        let expectedFeed: [FeedItem] = []
+        let exp = expectation(description: "Waiting for load completion")
+
+        sut.load { result in
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response, expectedFeed)
+            case let .failure(error):
+                XCTFail("Expected to successfully receive \(expectedFeed), got error \(error) instead")
+            }
+            exp.fulfill()
+        }
+        
+        let emptyData = makeItemsJSON([])
+        client.complete(withStatusCode: 200, data: emptyData)
+        wait(for: [exp], timeout: 1.0)
     }
 
     // MARK: - Helpers
@@ -90,6 +164,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
 
     }
     
+    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+        let json = ["artObjects": items]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
     private class HTTPClientSpy: HTTPClient {
         typealias Completion = (HTTPClient.Result) -> Void
         
@@ -106,6 +185,16 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         func completeWithError(_ error: Error, at index: Int = 0) {
             recordedRequests[index].completion(.failure(error))
+        }
+
+        func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
+            let response = HTTPURLResponse(
+                url: requestedUrls[index],
+                statusCode: code,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            recordedRequests[index].completion(.success((data, response)))
         }
     }
 }
