@@ -155,6 +155,26 @@ final class RemoteFeedLoaderTests: XCTestCase {
         })
     }
 
+    func test_load_deliversFeedOn200HTTPResponseWithValidJSON() {
+        let (sut, client) = makeSUT()
+        let items = [
+            makeItem(title: "De Nachtwacht",
+                     longTitle: "De Nachtwacht, Rembrandt van Rijn, 1642",
+                     principalOrFirstMaker: "Rembrandt van Rijn",
+                     imageUrl: URL(string: "http://an-image-1.url")!),
+            makeItem(title: "Sunflowers", 
+                     longTitle: "Sunflowers, Vincent Van Gogh, 1889",
+                     principalOrFirstMaker: "Vincent Van Gogh",
+                     imageUrl: URL(string: "http://an-image-2.url")!)
+        ]
+        let models = items.map { $0.item }
+        let itemsJson = makeItemsJSON(items.map { $0.json})
+        
+        expect(sut, toCompleteWith: .success(models), when: {
+            client.complete(withStatusCode: 200, data: itemsJson)
+        })
+    }
+
     // MARK: - Helpers
     
     private func makeSUT() -> (RemoteFeedLoader, HTTPClientSpy) {
@@ -171,6 +191,24 @@ final class RemoteFeedLoaderTests: XCTestCase {
     private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
         let json = ["artObjects": items]
         return try! JSONSerialization.data(withJSONObject: json)
+    }
+    
+    private func makeItem(title: String, longTitle: String, principalOrFirstMaker: String, imageUrl: URL) -> (item: FeedItem, json: [String: Any]) {
+        let id = UUID()
+        let item = FeedItem(id: id, title: title, imageUrl: imageUrl)
+        
+        let json = [
+            "id": id.uuidString,
+            "title": title,
+            "longTitle": longTitle,
+            "principalOrFirstMaker": principalOrFirstMaker,
+            "webImage": ["url": imageUrl.absoluteString],
+            "headerImage": ["url": imageUrl.absoluteString]
+        ].reduce(into: [String: Any]()) { (acc, e) in
+            acc[e.key] = e.value
+        }
+        
+        return (item, json)
     }
 
     private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
