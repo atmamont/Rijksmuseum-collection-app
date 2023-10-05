@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		751263902ACD60CD00E4BD70 /* RijksmuseumFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		751263912ACD60EF00E4BD70 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0B82ACC31B300C8BB1A /* FeedItem.swift */; };
+		7536413A2ACF1E3500F3050A /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753641392ACF1E3500F3050A /* RemoteFeedLoader.swift */; };
+		7536413C2ACF1E6100F3050A /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7536413B2ACF1E6100F3050A /* RemoteFeedItem.swift */; };
 		756BB8372ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; };
 		756BB8422ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; };
 		756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */; };
@@ -69,6 +71,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		753641392ACF1E3500F3050A /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
+		7536413B2ACF1E6100F3050A /* RemoteFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItem.swift; sourceTree = "<group>"; };
 		756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
 		756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RijksmuseumFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		756BB8362ACD596800807FF7 /* RijksmuseumFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RijksmuseumFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -226,6 +230,8 @@
 			children = (
 				757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */,
 				757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */,
+				753641392ACF1E3500F3050A /* RemoteFeedLoader.swift */,
+				7536413B2ACF1E6100F3050A /* RemoteFeedItem.swift */,
 			);
 			path = "Feed API";
 			sourceTree = "<group>";
@@ -412,6 +418,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7536413A2ACF1E3500F3050A /* RemoteFeedLoader.swift in Sources */,
+				7536413C2ACF1E6100F3050A /* RemoteFeedItem.swift in Sources */,
 				756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */,
 				756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */,
 				751263912ACD60EF00E4BD70 /* FeedItem.swift in Sources */,
