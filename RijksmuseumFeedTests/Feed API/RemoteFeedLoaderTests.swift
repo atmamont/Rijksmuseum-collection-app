@@ -133,6 +133,19 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_deliversInvalidDataErrorWhenReceivingResponseWithNon200StatusCode() {
+        let (sut, client) = makeSUT()
+        
+        let errorCodeResponses = [199, 201, 300, 400, 404, 500]
+        
+        errorCodeResponses.enumerated().forEach { index, value in
+            expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
+                let jsonData = makeItemsJSON([])
+                client.complete(withStatusCode: value, data: jsonData, at: index)
+            })
+        }
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> (RemoteFeedLoader, HTTPClientSpy) {
