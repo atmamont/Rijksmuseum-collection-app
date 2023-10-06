@@ -11,23 +11,14 @@ import RijksmuseumFeed
 
 final class FeedViewControllerTests: XCTestCase {
 
-    func test_init_doesNotLoadFeed() {
-        let (_, loader) = makeSUT()
+    func test_loadActions_triggerFeedLoad() {
+        let (sut, loader) = makeSUT()
         
         XCTAssertEqual(loader.loadCallCount, 0, "Load is not expected on init")
-    }
-    
-    func test_viewDidLoad_loadsFeed() {
-        let (sut, loader) = makeSUT()
-        
+
         sut.loadViewIfNeeded()
-        
         XCTAssertEqual(loader.loadCallCount, 1, "Load is expected on viewDidLoad")
-    }
-    
-    func test_pullToRefresh_loadsFeed() {
-        let (sut, loader) = makeSUT()
-        
+
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 2, "Pull to refresh should load feed")
 
