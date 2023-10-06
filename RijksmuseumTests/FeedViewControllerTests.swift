@@ -36,6 +36,17 @@ final class FeedViewControllerTests: XCTestCase {
         refreshControl?.simulatePullToRefresh()
         XCTAssertEqual(loader.loadCallCount, 3, "Pull to refresh should load feed")
     }
+    
+    func test_loadCompletes_hidesLoadingIndicator() {
+        let (sut, loader) = makeSUT()
+        
+        let refreshControl = sut.collectionView.refreshControl
+
+        sut.loadViewIfNeeded()
+        loader.completeLoading()
+        
+        XCTAssertEqual(refreshControl?.isRefreshing, false)
+    }
 
     private func makeSUT() -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
@@ -49,10 +60,17 @@ final class FeedViewControllerTests: XCTestCase {
     }
     
     private class LoaderSpy: FeedLoader {
-        var loadCallCount = 0
+        var loadCallCount: Int {
+            completions.count
+        }
+        var completions = [(FeedLoader.Result) -> Void]()
         
         func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
-            loadCallCount += 1
+            completions.append(completion)
+        }
+        
+        func completeLoading(at index: Int = 0) {
+            completions[index](.success([]))
         }
     }
 }

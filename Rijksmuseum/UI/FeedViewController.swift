@@ -25,8 +25,18 @@ class FeedViewController: UICollectionViewController {
     }
     
     @objc private func load() {
-        loader?.load { _ in
-            
+        refreshControl.beginRefreshing()
+
+        loader?.load { [weak self] _ in
+            self?.refreshControl.endRefreshing()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if feed.isEmpty {
+            refreshControl.beginRefreshing()
         }
     }
     
@@ -35,6 +45,7 @@ class FeedViewController: UICollectionViewController {
 
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
+        collectionView.alwaysBounceVertical = true
         
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         
