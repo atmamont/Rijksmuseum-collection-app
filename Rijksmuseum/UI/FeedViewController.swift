@@ -13,24 +13,21 @@ struct FeedItemViewModel {
 }
 
 class FeedViewController: UICollectionViewController {
-    let feed = FeedItemViewModel.prototypeFeed
+    var feed = [FeedItemViewModel]()
+    let refreshControl = UIRefreshControl()
     
-    let compositionalLayout: UICollectionViewCompositionalLayout = {
-        let fraction: CGFloat = 1 / 2
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fraction), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(fraction))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        return UICollectionViewCompositionalLayout(section: section)
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+
         collectionView.collectionViewLayout = compositionalLayout
+        collectionView.refreshControl = refreshControl
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refresh()
+        collectionView.setContentOffset(CGPoint(x: 0.0, y: -refreshControl.frame.size.height), animated: true)
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -47,5 +44,34 @@ class FeedViewController: UICollectionViewController {
         cell.configure(with: model)
         return cell
     }
+    
+    @IBAction func refresh() {
+        refreshControl.beginRefreshing()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            if self.feed.isEmpty {
+                self.feed = FeedItemViewModel.prototypeFeed
+                self.collectionView.reloadData()
+            }
+            self.refreshControl.endRefreshing()
+        }
+    }
+
+    //MARK: - Layout
+    
+    private let compositionalLayout: UICollectionViewCompositionalLayout = {
+        let fraction: CGFloat = 1 / 2
+        let inset = 5.0
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fraction), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(fraction))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return UICollectionViewCompositionalLayout(section: section)
+    }()
 }
 

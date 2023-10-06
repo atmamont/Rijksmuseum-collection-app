@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Feed View Controller-->
+        <!--Rijksmuseum-->
         <scene sceneID="gTn-kI-INC">
             <objects>
-                <collectionViewController id="Sey-1s-x2A" customClass="FeedViewController" customModule="Rijksmuseum" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController title="Rijksmuseum" id="Sey-1s-x2A" customClass="FeedViewController" customModule="Rijksmuseum" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="YEW-Iy-O73">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -53,16 +53,16 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t4Q-Me-VQa" userLabel="Title Container">
-                                            <rect key="frame" x="193.66666666666666" y="217" width="39.333333333333343" height="21"/>
+                                            <rect key="frame" x="190.66666666666666" y="214" width="39.333333333333343" height="21"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-VH-hWr">
                                                     <rect key="frame" x="2" y="2" width="35.333333333333336" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" systemColor="systemGrayColor"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="Sia-VH-hWr" firstAttribute="leading" secondItem="t4Q-Me-VQa" secondAttribute="leading" constant="2" id="5EX-gK-iTk"/>
                                                 <constraint firstAttribute="bottom" secondItem="Sia-VH-hWr" secondAttribute="bottom" constant="2" id="Ydb-k8-PV5"/>
@@ -71,7 +71,7 @@
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="4"/>
+                                                    <integer key="value" value="8"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
@@ -80,14 +80,15 @@
                                         <constraint firstItem="JtW-FC-uiU" firstAttribute="top" secondItem="G3O-R1-J6p" secondAttribute="top" id="5nB-Wc-la4"/>
                                         <constraint firstItem="t4Q-Me-VQa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="G3O-R1-J6p" secondAttribute="leading" constant="20" id="6Q5-Jf-zHn"/>
                                         <constraint firstItem="JtW-FC-uiU" firstAttribute="leading" secondItem="G3O-R1-J6p" secondAttribute="leading" id="Ipx-29-TQX"/>
-                                        <constraint firstAttribute="trailing" secondItem="t4Q-Me-VQa" secondAttribute="trailing" constant="2" id="ZyO-Um-2XF"/>
+                                        <constraint firstAttribute="trailing" secondItem="t4Q-Me-VQa" secondAttribute="trailing" constant="5" id="ZyO-Um-2XF"/>
                                         <constraint firstAttribute="bottom" secondItem="JtW-FC-uiU" secondAttribute="bottom" id="kcV-pN-65o"/>
                                         <constraint firstAttribute="trailing" secondItem="JtW-FC-uiU" secondAttribute="trailing" id="tGm-az-HNZ"/>
-                                        <constraint firstAttribute="bottom" secondItem="t4Q-Me-VQa" secondAttribute="bottom" constant="2" id="zh9-DA-sS5"/>
+                                        <constraint firstAttribute="bottom" secondItem="t4Q-Me-VQa" secondAttribute="bottom" constant="5" id="zh9-DA-sS5"/>
                                     </constraints>
                                 </collectionViewCellContentView>
                                 <size key="customSize" width="235" height="240"/>
                                 <connections>
+                                    <outlet property="imageContainer" destination="JtW-FC-uiU" id="RjM-po-CS4"/>
                                     <outlet property="imageView" destination="6dF-Jf-Fvk" id="9Vn-E8-nJf"/>
                                     <outlet property="title" destination="Sia-VH-hWr" id="JbU-hC-1A7"/>
                                 </connections>
@@ -126,12 +127,6 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
