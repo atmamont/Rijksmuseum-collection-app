@@ -138,6 +138,26 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.renderedImageData, imageData1)
     }
 
+    func test_feed_rendersImageLoadedFromURLWhenFeedItesIsNearlyVisible() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2])
+        XCTAssertEqual(loader.loadedImageUrls, [])
+        
+        sut.simulateFeedItemNearlyVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl])
+
+        sut.simulateFeedItemNearlyVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl, item2.imageUrl])
+        
+        sut.simulateFeedItemNotNearlyVisible(at: 1)
+        XCTAssertEqual(loader.canceledImageUrls, [item2.imageUrl])
+
+    }
+    
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
@@ -245,6 +265,20 @@ private extension FeedViewController {
         let delegate = collectionView.delegate
         let indexPath = IndexPath(item: index, section: defaultSection())
         delegate?.collectionView?(collectionView, didEndDisplaying: view!, forItemAt: indexPath)
+    }
+    
+    func simulateFeedItemNearlyVisible(at index: Int) {
+        let ds = collectionView.prefetchDataSource
+        let indexPath = IndexPath(item: index, section: defaultSection())
+        ds?.collectionView(collectionView, prefetchItemsAt: [indexPath])
+    }
+
+    func simulateFeedItemNotNearlyVisible(at index: Int) {
+        simulateFeedItemNearlyVisible(at: index)
+        
+        let ds = collectionView.prefetchDataSource
+        let indexPath = IndexPath(item: index, section: defaultSection())
+        ds?.collectionView?(collectionView, cancelPrefetchingForItemsAt: [indexPath])
     }
 
     var isShowingLoadingIndicator: Bool {

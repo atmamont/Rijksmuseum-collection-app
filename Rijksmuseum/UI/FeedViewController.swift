@@ -23,7 +23,7 @@ protocol ImageDataLoader {
     func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> ImageDataLoaderTask
 }
 
-class FeedViewController: UICollectionViewController {
+class FeedViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
     var feed = [FeedItem]()
     let refreshControl = UIRefreshControl()
     var tasks = [IndexPath: ImageDataLoaderTask]()
@@ -66,6 +66,7 @@ class FeedViewController: UICollectionViewController {
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
+        collectionView.prefetchDataSource = self
         
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         
@@ -117,5 +118,19 @@ extension FeedViewController {
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         tasks[indexPath]?.cancel()
         tasks[indexPath] = nil
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            let model = feed[indexPath.item]
+            tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl, completion: { _ in })
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            tasks[indexPath]?.cancel()
+            tasks[indexPath] = nil
+        }
     }
 }
