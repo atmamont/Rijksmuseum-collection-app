@@ -13,13 +13,17 @@ struct FeedItemViewModel {
     let imageName: String
 }
 
+protocol ImageDataLoaderTask {
+    func cancel()
+}
 protocol ImageDataLoader {
-    func loadImageData(from url: URL)
+    func loadImageData(from url: URL) -> ImageDataLoaderTask
 }
 
 class FeedViewController: UICollectionViewController {
     var feed = [FeedItem]()
     let refreshControl = UIRefreshControl()
+    var tasks = [IndexPath: ImageDataLoaderTask]()
     
     var feedLoader: FeedLoader?
     var imageLoader: ImageDataLoader?
@@ -96,6 +100,12 @@ extension FeedViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedItemCell", for: indexPath) as! FeedItemCell
         let model = feed[indexPath.row]
         cell.configure(with: model)
+        tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl)
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        tasks[indexPath]?.cancel()
+        tasks[indexPath] = nil
     }
 }

@@ -71,8 +71,26 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoading(with: [item1])
-        
         XCTAssertEqual(loader.loadedImageUrls, [])
+        
+        sut.simulateFeedItemVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl])
+    }
+    
+    func test_feed_cancelsLoadingImageUrlWhenCellBecomesInvisible() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2])
+        XCTAssertEqual(loader.canceledImageUrls, [])
+        
+        sut.simulateFeedItemNotVisible(at: 0)
+        XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl])
+        
+        sut.simulateFeedItemNotVisible(at: 1)
+        XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl, item2.imageUrl])
     }
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
@@ -122,10 +140,21 @@ final class FeedViewControllerTests: XCTestCase {
         }
         
         // MARK: - ImageDataLoader
-        var loadedImageUrls = [URL]()
+        private struct ImageDataLoaderTaskSpy: ImageDataLoaderTask {
+            let callback: () -> Void
+            func cancel() {
+                callback()
+            }
+        }
         
-        func loadImageData(from url: URL) {
+        var loadedImageUrls = [URL]()
+        var canceledImageUrls = [URL]()
+        
+        func loadImageData(from url: URL) -> ImageDataLoaderTask {
             loadedImageUrls.append(url)
+            return ImageDataLoaderTaskSpy { [weak self] in
+                self?.canceledImageUrls.append(url)
+            }
         }
     }
 }
@@ -146,10 +175,19 @@ private extension FeedViewController {
         collectionView.refreshControl?.simulatePullToRefresh()
     }
     
-    func simulateFeedItemVisible(at index: Int) {
-        _ = feedItemView(at: index)
+    @discardableResult
+    func simulateFeedItemVisible(at index: Int) -> FeedItemCell? {
+        return feedItemView(at: index) as? FeedItemCell
     }
     
+    func simulateFeedItemNotVisible(at index: Int) {
+        let view = simulateFeedItemVisible(at: index)
+        
+        let delegate = collectionView.delegate
+        let indexPath = IndexPath(item: index, section: defaultSection())
+        delegate?.collectionView?(collectionView, didEndDisplaying: view!, forItemAt: indexPath)
+    }
+
     var isShowingLoadingIndicator: Bool {
         collectionView.refreshControl?.isRefreshing ?? false
     }
