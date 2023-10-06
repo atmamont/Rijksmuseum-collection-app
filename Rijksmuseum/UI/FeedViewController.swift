@@ -20,7 +20,7 @@ class FeedViewController: UICollectionViewController {
     var loader: FeedLoader?
     
     convenience init(loader: FeedLoader) {
-        self.init()
+        self.init(collectionViewLayout: UICollectionViewLayout())
         self.loader = loader
     }
     
@@ -30,6 +30,10 @@ class FeedViewController: UICollectionViewController {
 
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
+        
+        loader?.load(completion: { _ in
+            
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
