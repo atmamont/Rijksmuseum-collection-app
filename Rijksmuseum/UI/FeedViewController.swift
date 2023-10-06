@@ -14,7 +14,7 @@ struct FeedItemViewModel {
 }
 
 class FeedViewController: UICollectionViewController {
-    var feed = [FeedItemViewModel]()
+    var feed = [FeedItem]()
     let refreshControl = UIRefreshControl()
     
     var loader: FeedLoader?
@@ -27,7 +27,8 @@ class FeedViewController: UICollectionViewController {
     @objc private func load() {
         refreshControl.beginRefreshing()
 
-        loader?.load { [weak self] _ in
+        loader?.load { [weak self] result in
+            self?.feed = (try? result.get()) ?? []
             self?.refreshControl.endRefreshing()
         }
     }
@@ -45,28 +46,14 @@ class FeedViewController: UICollectionViewController {
 
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
-        collectionView.alwaysBounceVertical = true
+        collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
+
         
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         
         load()
     }
-    
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        2
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        feed.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "feedCell", for: indexPath) as! FeedItemCell
-        let model = feed[indexPath.row]
-        cell.configure(with: model)
-        return cell
-    }
-    
+        
     //MARK: - Layout
     
     private let compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -85,3 +72,19 @@ class FeedViewController: UICollectionViewController {
     }()
 }
 
+extension FeedViewController {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        feed.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedItemCell", for: indexPath) as! FeedItemCell
+        let model = feed[indexPath.row]
+        cell.configure(with: model)
+        return cell
+    }
+}

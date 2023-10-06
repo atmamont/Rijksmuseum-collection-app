@@ -6,19 +6,22 @@
 //
 
 import UIKit
+import RijksmuseumFeed
 
 final class FeedItemCell: UICollectionViewCell {
-    @IBOutlet private(set) var title: UILabel! 
-    @IBOutlet private(set) var imageView: UIImageView! {
-        didSet {
-            imageView.contentMode = .scaleAspectFill
-        }
-    }
-    @IBOutlet private(set) var imageContainer: UIView!
+    private(set) lazy var titleLabel = UILabel()
+    private(set) lazy var imageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFill
+        return view
+    }()
+    private(set) lazy var imageContainer = UIView()
     
-    func configure(with model: FeedItemViewModel) {
-        title.text = model.title
-        fadeIn(UIImage(named: model.imageName))
+    func configure(with model: FeedItem) {
+        titleLabel.text = model.title
+        
+//        fadeIn(UIImage(named: model.imageName))
     }
     
     override func awakeFromNib() {

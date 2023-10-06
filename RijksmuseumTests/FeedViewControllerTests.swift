@@ -35,35 +35,26 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.isShowingLoadingIndicator, false)
     }
     
-///    Thess tests do not work because of new behaviour of UIRefreshControl that ignores beginRefreshing() when off-screen
+    func test_loadCompletion_rendersFeed() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: anyURL())
+        let item3 = makeFeedItem(title: "Test item 3", imageUrl: anyURL())
 
-//    func test_userInitiatesReload_showsLoadingIndicator() {
-//        let (sut, _) = makeSUT()
-//        
-//        sut.simulateUserInitiatedFeedReload()
-//        
-//        XCTAssertTrue(sut.isShowingLoadingIndicator)
-//    }
-//
-//    func test_userInitiatesReload_hidesLoadingIndicatorOnLoadCompletion() {
-//        let (sut, loader) = makeSUT()
-//        
-//        sut.simulateUserInitiatedFeedReload()
-//        loader.completeLoading()
-//        
-//        XCTAssertFalse(sut.isShowingLoadingIndicator)
-//    }
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.numberOfRenderedFeedItems(), 0)
+        
+        loader.completeLoading(with: [item1])
+        XCTAssertEqual(sut.numberOfRenderedFeedItems(), 1)
+        assertThat(sut, hasViewConfiguredForItem: item1, at: 0, file: #file, line: #line)
 
-//    func test_load_showsLoadingIndicator() {
-//        let (sut, loader) = makeSUT()
-//        
-//        let refreshControl = sut.collectionView.refreshControl
-//
-//        sut.loadViewIfNeeded()
-//        
-//        XCTAssertEqual(refreshControl?.isRefreshing, true)
-//    }
-
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeLoading(with: [item1, item2, item3])
+        assertThat(sut, hasViewConfiguredForItem: item1, at: 0, file: #file, line: #line)
+        assertThat(sut, hasViewConfiguredForItem: item2, at: 1, file: #file, line: #line)
+        assertThat(sut, hasViewConfiguredForItem: item3, at: 2, file: #file, line: #line)
+    }
+    
     private func makeSUT() -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
@@ -73,6 +64,16 @@ final class FeedViewControllerTests: XCTestCase {
         
         return (sut, loader)
 
+    }
+    
+    func makeFeedItem(title: String, imageUrl: URL) -> FeedItem {
+        FeedItem(id: UUID(), title: title, imageUrl: imageUrl)
+    }
+    
+    func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at index: Int, file: StaticString, line: UInt) {
+        let view = sut.feedItemView(at: index) as? FeedItemCell
+        XCTAssertNotNil(view, file: file, line: line)
+        XCTAssertEqual(view?.titleLabel.text, item.title, file: file, line: line)
     }
     
     private class LoaderSpy: FeedLoader {
@@ -85,8 +86,8 @@ final class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func completeLoading(at index: Int = 0) {
-            completions[index](.success([]))
+        func completeLoading(with items: [FeedItem] = [], at index: Int = 0) {
+            completions[index](.success(items))
         }
     }
 }
@@ -109,5 +110,18 @@ private extension FeedViewController {
     
     var isShowingLoadingIndicator: Bool {
         collectionView.refreshControl?.isRefreshing ?? false
+    }
+    
+    func defaultSection() -> Int { 0 }
+    
+    func numberOfRenderedFeedItems() -> Int {
+        collectionView(collectionView, numberOfItemsInSection: defaultSection())
+    }
+    
+    func feedItemView(at index: Int) -> UIView? {
+        let ds = collectionView.dataSource
+        let indexPath = IndexPath(item: index, section: defaultSection())
+        let view = ds?.collectionView(collectionView, cellForItemAt: indexPath)
+        return view
     }
 }
