@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RijksmuseumFeed
 
 struct FeedItemViewModel {
     let title: String
@@ -15,6 +16,13 @@ struct FeedItemViewModel {
 class FeedViewController: UICollectionViewController {
     var feed = [FeedItemViewModel]()
     let refreshControl = UIRefreshControl()
+    
+    var loader: FeedLoader?
+    
+    convenience init(loader: FeedLoader) {
+        self.init()
+        self.loader = loader
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
