@@ -35,7 +35,34 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3, "Pull to refresh should load feed")
     }
 
-///    This test does not work because of new behaviour of UIRefreshControl that ignores beginRefreshing() when off-screen
+    func test_loadCompletes_hidesLoadingIndicator() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeLoading()
+        
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+    }
+    
+///    Thess tests do not work because of new behaviour of UIRefreshControl that ignores beginRefreshing() when off-screen
+
+//    func test_userInitiatesReload_showsLoadingIndicator() {
+//        let (sut, _) = makeSUT()
+//        
+//        sut.simulateUserInitiatedFeedReload()
+//        
+//        XCTAssertTrue(sut.isShowingLoadingIndicator)
+//    }
+//
+//    func test_userInitiatesReload_hidesLoadingIndicatorOnLoadCompletion() {
+//        let (sut, loader) = makeSUT()
+//        
+//        sut.simulateUserInitiatedFeedReload()
+//        loader.completeLoading()
+//        
+//        XCTAssertFalse(sut.isShowingLoadingIndicator)
+//    }
+
 //    func test_load_showsLoadingIndicator() {
 //        let (sut, loader) = makeSUT()
 //        
@@ -45,15 +72,6 @@ final class FeedViewControllerTests: XCTestCase {
 //        
 //        XCTAssertEqual(refreshControl?.isRefreshing, true)
 //    }
-
-    func test_loadCompletes_hidesLoadingIndicator() {
-        let (sut, loader) = makeSUT()
-        
-        sut.loadViewIfNeeded()
-        loader.completeLoading()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
-    }
 
     private func makeSUT() -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
