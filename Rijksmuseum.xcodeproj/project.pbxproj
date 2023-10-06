@@ -28,6 +28,8 @@
 		757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */; };
 		757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */; };
 		757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */; };
+		75BB79AA2AD0580200727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
+		75BB79AB2AD0587F00727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +104,7 @@
 		757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		757CB0C02ACC350800C8BB1A /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
+		75BB79A92AD0580200727138 /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +237,7 @@
 				757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */,
 				7536413D2ACFEC0000F3050A /* FeedItemViewModel+Prototype.swift */,
 				7536413F2ACFEC7D00F3050A /* FeedItemCell.swift */,
+				75BB79A92AD0580200727138 /* UIView+Shimmering.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -456,6 +460,7 @@
 				7536413E2ACFEC0000F3050A /* FeedItemViewModel+Prototype.swift in Sources */,
 				757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */,
 				757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */,
+				75BB79AA2AD0580200727138 /* UIView+Shimmering.swift in Sources */,
 				757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */,
 				753641402ACFEC7D00F3050A /* FeedItemCell.swift in Sources */,
 			);
@@ -465,6 +470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75BB79AB2AD0587F00727138 /* UIView+Shimmering.swift in Sources */,
 				753641452AD001AD00F3050A /* XCTestCase+Helpers.swift in Sources */,
 				753641422ACFFC2900F3050A /* FeedViewControllerTests.swift in Sources */,
 			);

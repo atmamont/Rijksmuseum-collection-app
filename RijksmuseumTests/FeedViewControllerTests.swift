@@ -92,6 +92,30 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateFeedItemNotVisible(at: 1)
         XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl, item2.imageUrl])
     }
+    
+    func test_feedLoadingIndicator_isVisibleWhileLoadingImage() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2])
+        let view0 = sut.simulateFeedItemVisible(at: 0)
+        let view1 = sut.simulateFeedItemVisible(at: 1)
+        
+        XCTAssertEqual(view0?.isShowingLoadingIndicator, true)
+        XCTAssertEqual(view1?.isShowingLoadingIndicator, true)
+        
+        loader.completeImageLoading(at: 0)
+        XCTAssertEqual(view0?.isShowingLoadingIndicator, false)
+        XCTAssertEqual(view1?.isShowingLoadingIndicator, true)
+        
+        loader.completeImageLoading(with: anyNSError(), at: 1)
+        XCTAssertEqual(view0?.isShowingLoadingIndicator, false)
+        XCTAssertEqual(view1?.isShowingLoadingIndicator, false)
+    }
+    
+    // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
@@ -147,14 +171,26 @@ final class FeedViewControllerTests: XCTestCase {
             }
         }
         
-        var loadedImageUrls = [URL]()
+        var imageRequests = [(url: URL, completion: (ImageDataLoader.Result) -> Void)]()
+        var loadedImageUrls: [URL] {
+            imageRequests.map { $0.url }
+        }
         var canceledImageUrls = [URL]()
         
-        func loadImageData(from url: URL) -> ImageDataLoaderTask {
-            loadedImageUrls.append(url)
+        func loadImageData(from url: URL, completion: @escaping (ImageDataLoader.Result) -> Void) -> ImageDataLoaderTask {
+            imageRequests.append((url: url, completion: completion))
+            
             return ImageDataLoaderTaskSpy { [weak self] in
                 self?.canceledImageUrls.append(url)
             }
+        }
+        
+        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
+            imageRequests[index].completion(.success(imageData))
+        }
+
+        func completeImageLoading(with error: Error, at index: Int = 0) {
+            imageRequests[index].completion(.failure(error))
         }
     }
 }
@@ -203,5 +239,11 @@ private extension FeedViewController {
         let indexPath = IndexPath(item: index, section: defaultSection())
         let view = ds?.collectionView(collectionView, cellForItemAt: indexPath)
         return view
+    }
+}
+
+private extension FeedItemCell {
+    var isShowingLoadingIndicator: Bool {
+        imageContainer.isShimmering
     }
 }

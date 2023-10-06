@@ -16,8 +16,11 @@ struct FeedItemViewModel {
 protocol ImageDataLoaderTask {
     func cancel()
 }
+
 protocol ImageDataLoader {
-    func loadImageData(from url: URL) -> ImageDataLoaderTask
+    typealias Result = Swift.Result<Data, Error>
+    
+    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> ImageDataLoaderTask
 }
 
 class FeedViewController: UICollectionViewController {
@@ -100,7 +103,10 @@ extension FeedViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedItemCell", for: indexPath) as! FeedItemCell
         let model = feed[indexPath.row]
         cell.configure(with: model)
-        tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl)
+        cell.imageContainer.startShimmering()
+        tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl) { [weak cell] result in
+            cell?.imageContainer.stopShimmering()
+        }
         return cell
     }
     
