@@ -42,20 +42,17 @@ final class FeedViewControllerTests: XCTestCase {
         let item3 = makeFeedItem(title: "Test item 3", imageUrl: anyURL())
 
         sut.loadViewIfNeeded()
-        XCTAssertEqual(sut.numberOfRenderedFeedItems(), 0)
+        assertThat(sut, renders: [])
         
         loader.completeLoading(with: [item1])
-        XCTAssertEqual(sut.numberOfRenderedFeedItems(), 1)
-        assertThat(sut, hasViewConfiguredForItem: item1, at: 0, file: #file, line: #line)
+        assertThat(sut, renders: [item1])
 
         sut.simulateUserInitiatedFeedReload()
         loader.completeLoading(with: [item1, item2, item3])
-        assertThat(sut, hasViewConfiguredForItem: item1, at: 0, file: #file, line: #line)
-        assertThat(sut, hasViewConfiguredForItem: item2, at: 1, file: #file, line: #line)
-        assertThat(sut, hasViewConfiguredForItem: item3, at: 2, file: #file, line: #line)
+        assertThat(sut, renders: [item1, item2, item3])
     }
     
-    private func makeSUT() -> (FeedViewController, LoaderSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
         
@@ -66,14 +63,22 @@ final class FeedViewControllerTests: XCTestCase {
 
     }
     
-    func makeFeedItem(title: String, imageUrl: URL) -> FeedItem {
-        FeedItem(id: UUID(), title: title, imageUrl: imageUrl)
-    }
-    
-    func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at index: Int, file: StaticString, line: UInt) {
+    func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedItemView(at: index) as? FeedItemCell
         XCTAssertNotNil(view, file: file, line: line)
         XCTAssertEqual(view?.titleLabel.text, item.title, file: file, line: line)
+    }
+    
+    func assertThat(_ sut: FeedViewController, renders items: [FeedItem], file: StaticString = #file, line: UInt = #line) {
+        XCTAssertEqual(items.count, sut.numberOfRenderedFeedItems())
+        
+        items.enumerated().forEach { index, item in
+            assertThat(sut, hasViewConfiguredForItem: item, at: index)
+        }
+    }
+
+    func makeFeedItem(title: String, imageUrl: URL) -> FeedItem {
+        FeedItem(id: UUID(), title: title, imageUrl: imageUrl)
     }
     
     private class LoaderSpy: FeedLoader {
