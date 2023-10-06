@@ -28,7 +28,13 @@ class FeedViewController: UICollectionViewController {
         refreshControl.beginRefreshing()
 
         loader?.load { [weak self] result in
-            self?.feed = (try? result.get()) ?? []
+            switch result {
+            case let .success(feed):
+                self?.feed = (try? result.get()) ?? []
+                self?.collectionView.reloadData()
+            case .failure:
+                break
+            }
             self?.refreshControl.endRefreshing()
         }
     }

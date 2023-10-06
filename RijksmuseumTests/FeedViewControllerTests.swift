@@ -52,6 +52,19 @@ final class FeedViewControllerTests: XCTestCase {
         assertThat(sut, renders: [item1, item2, item3])
     }
     
+    func test_loadCompletion_doesNotBreakLoadedFeedOnReceivingLoadingError() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+
+        sut.loadViewIfNeeded()
+        loader.completeLoading(with: [item1])
+        assertThat(sut, renders: [item1])
+
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeLoading(with: anyNSError())
+        assertThat(sut, renders: [item1])
+    }
+
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
@@ -93,6 +106,10 @@ final class FeedViewControllerTests: XCTestCase {
         
         func completeLoading(with items: [FeedItem] = [], at index: Int = 0) {
             completions[index](.success(items))
+        }
+
+        func completeLoading(with error: Error, at index: Int = 0) {
+            completions[index](.failure(error))
         }
     }
 }
