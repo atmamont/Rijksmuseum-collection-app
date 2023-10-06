@@ -104,7 +104,11 @@ extension FeedViewController {
         let model = feed[indexPath.row]
         cell.configure(with: model)
         cell.imageContainer.startShimmering()
+        cell.imageView.image = nil
         tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl) { [weak cell] result in
+            if let data = try? result.get() {
+                cell?.imageView.image = UIImage.init(data: data, scale: 1.0)
+            }
             cell?.imageContainer.stopShimmering()
         }
         return cell

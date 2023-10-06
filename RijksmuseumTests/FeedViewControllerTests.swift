@@ -115,6 +115,29 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.isShowingLoadingIndicator, false)
     }
     
+    func test_feed_rendersImageLoadedFromURL() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2])
+        let view0 = sut.simulateFeedItemVisible(at: 0)
+        let view1 = sut.simulateFeedItemVisible(at: 1)
+        XCTAssertEqual(view0?.renderedImageData, .none)
+        XCTAssertEqual(view1?.renderedImageData, .none)
+        
+        let imageData0 = UIImage(data: UIColor.white.makeImage().pngData()!)!.pngData()!
+        loader.completeImageLoading(with: imageData0, at: 0)
+        XCTAssertEqual(view0?.renderedImageData, imageData0)
+        XCTAssertEqual(view1?.renderedImageData, .none)
+
+        let imageData1 = UIImage(data: UIColor.red.makeImage().pngData()!)!.pngData()!
+        loader.completeImageLoading(with: imageData1, at: 1)
+        XCTAssertEqual(view0?.renderedImageData, imageData0)
+        XCTAssertEqual(view1?.renderedImageData, imageData1)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
@@ -213,7 +236,7 @@ private extension FeedViewController {
     
     @discardableResult
     func simulateFeedItemVisible(at index: Int) -> FeedItemCell? {
-        return feedItemView(at: index) as? FeedItemCell
+        feedItemView(at: index) as? FeedItemCell
     }
     
     func simulateFeedItemNotVisible(at index: Int) {
@@ -245,5 +268,18 @@ private extension FeedViewController {
 private extension FeedItemCell {
     var isShowingLoadingIndicator: Bool {
         imageContainer.isShimmering
+    }
+    
+    var renderedImageData: Data? {
+        imageView.image?.pngData()
+    }
+}
+
+private extension UIColor {
+    func makeImage(_ size: CGSize = .init(width: 1.0, height: 1.0)) -> UIImage {
+        UIGraphicsImageRenderer(size: size).image { context in
+            self.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }
     }
 }
