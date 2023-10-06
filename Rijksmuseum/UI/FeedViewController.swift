@@ -13,21 +13,27 @@ struct FeedItemViewModel {
     let imageName: String
 }
 
+protocol ImageDataLoader {
+    func loadImageData(from url: URL)
+}
+
 class FeedViewController: UICollectionViewController {
     var feed = [FeedItem]()
     let refreshControl = UIRefreshControl()
     
-    var loader: FeedLoader?
+    var feedLoader: FeedLoader?
+    var imageLoader: ImageDataLoader?
     
-    convenience init(loader: FeedLoader) {
+    convenience init(loader: FeedLoader, imageLoader: ImageDataLoader) {
         self.init(collectionViewLayout: UICollectionViewLayout())
-        self.loader = loader
+        self.feedLoader = loader
+        self.imageLoader = imageLoader
     }
     
     @objc private func load() {
         refreshControl.beginRefreshing()
 
-        loader?.load { [weak self] result in
+        feedLoader?.load { [weak self] result in
             switch result {
             case let .success(feed):
                 self?.feed = (try? result.get()) ?? []
@@ -53,7 +59,6 @@ class FeedViewController: UICollectionViewController {
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
-
         
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         

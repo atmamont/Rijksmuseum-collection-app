@@ -14,23 +14,23 @@ final class FeedViewControllerTests: XCTestCase {
     func test_loadActions_triggerFeedLoad() {
         let (sut, loader) = makeSUT()
         
-        XCTAssertEqual(loader.loadCallCount, 0, "Load is not expected on init")
+        XCTAssertEqual(loader.requestFeedCallCount, 0, "Load is not expected on init")
 
         sut.loadViewIfNeeded()
-        XCTAssertEqual(loader.loadCallCount, 1, "Load is expected on viewDidLoad")
+        XCTAssertEqual(loader.requestFeedCallCount, 1, "Load is expected on viewDidLoad")
 
         sut.simulateUserInitiatedFeedReload()
-        XCTAssertEqual(loader.loadCallCount, 2, "Pull to refresh should load feed")
+        XCTAssertEqual(loader.requestFeedCallCount, 2, "Pull to refresh should load feed")
 
         sut.simulateUserInitiatedFeedReload()
-        XCTAssertEqual(loader.loadCallCount, 3, "Pull to refresh should load feed")
+        XCTAssertEqual(loader.requestFeedCallCount, 3, "Pull to refresh should load feed")
     }
 
     func test_loadCompletes_hidesLoadingIndicator() {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        loader.completeLoading()
+        loader.completeFeedLoading()
         
         XCTAssertEqual(sut.isShowingLoadingIndicator, false)
     }
@@ -44,11 +44,11 @@ final class FeedViewControllerTests: XCTestCase {
         sut.loadViewIfNeeded()
         assertThat(sut, renders: [])
         
-        loader.completeLoading(with: [item1])
+        loader.completeFeedLoading(with: [item1])
         assertThat(sut, renders: [item1])
 
         sut.simulateUserInitiatedFeedReload()
-        loader.completeLoading(with: [item1, item2, item3])
+        loader.completeFeedLoading(with: [item1, item2, item3])
         assertThat(sut, renders: [item1, item2, item3])
     }
     
@@ -57,23 +57,32 @@ final class FeedViewControllerTests: XCTestCase {
         let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
 
         sut.loadViewIfNeeded()
-        loader.completeLoading(with: [item1])
+        loader.completeFeedLoading(with: [item1])
         assertThat(sut, renders: [item1])
 
         sut.simulateUserInitiatedFeedReload()
-        loader.completeLoading(with: anyNSError())
+        loader.completeFeedLoading(with: anyNSError())
         assertThat(sut, renders: [item1])
+    }
+    
+    func test_feed_loadsImageUrlWhenVisible() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1])
+        
+        XCTAssertEqual(loader.loadedImageUrls, [])
     }
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = FeedViewController(loader: loader)
+        let sut = FeedViewController(loader: loader, imageLoader: loader)
         
         trackForMemoryLeaks(loader, file: #file, line: #line)
         trackForMemoryLeaks(sut, file: #file, line: #line)
         
         return (sut, loader)
-
     }
     
     func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at index: Int, file: StaticString = #file, line: UInt = #line) {
@@ -94,22 +103,29 @@ final class FeedViewControllerTests: XCTestCase {
         FeedItem(id: UUID(), title: title, imageUrl: imageUrl)
     }
     
-    private class LoaderSpy: FeedLoader {
-        var loadCallCount: Int {
-            completions.count
+    private class LoaderSpy: FeedLoader, ImageDataLoader {
+        var requestFeedCallCount: Int {
+            requestFeedCompletions.count
         }
-        var completions = [(FeedLoader.Result) -> Void]()
+        var requestFeedCompletions = [(FeedLoader.Result) -> Void]()
         
         func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
-            completions.append(completion)
+            requestFeedCompletions.append(completion)
         }
         
-        func completeLoading(with items: [FeedItem] = [], at index: Int = 0) {
-            completions[index](.success(items))
+        func completeFeedLoading(with items: [FeedItem] = [], at index: Int = 0) {
+            requestFeedCompletions[index](.success(items))
         }
 
-        func completeLoading(with error: Error, at index: Int = 0) {
-            completions[index](.failure(error))
+        func completeFeedLoading(with error: Error, at index: Int = 0) {
+            requestFeedCompletions[index](.failure(error))
+        }
+        
+        // MARK: - ImageDataLoader
+        var loadedImageUrls = [URL]()
+        
+        func loadImageData(from url: URL) {
+            loadedImageUrls.append(url)
         }
     }
 }
@@ -128,6 +144,10 @@ private extension UIRefreshControl {
 private extension FeedViewController {
     func simulateUserInitiatedFeedReload() {
         collectionView.refreshControl?.simulatePullToRefresh()
+    }
+    
+    func simulateFeedItemVisible(at index: Int) {
+        _ = feedItemView(at: index)
     }
     
     var isShowingLoadingIndicator: Bool {
