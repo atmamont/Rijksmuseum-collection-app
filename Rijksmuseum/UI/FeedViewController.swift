@@ -24,24 +24,23 @@ class FeedViewController: UICollectionViewController {
         self.loader = loader
     }
     
+    @objc private func load() {
+        loader?.load { _ in
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
 
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.refreshControl = refreshControl
         
-        loader?.load(completion: { _ in
-            
-        })
+        refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
+        
+        load()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        refresh()
-        collectionView.setContentOffset(CGPoint(x: 0.0, y: -refreshControl.frame.size.height), animated: true)
-    }
-
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
     }
@@ -57,18 +56,6 @@ class FeedViewController: UICollectionViewController {
         return cell
     }
     
-    @IBAction func refresh() {
-        refreshControl.beginRefreshing()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            if self.feed.isEmpty {
-                self.feed = FeedItemViewModel.prototypeFeed
-                self.collectionView.reloadData()
-            }
-            self.refreshControl.endRefreshing()
-        }
-    }
-
     //MARK: - Layout
     
     private let compositionalLayout: UICollectionViewCompositionalLayout = {
