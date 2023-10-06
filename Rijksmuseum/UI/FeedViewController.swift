@@ -116,8 +116,7 @@ extension FeedViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        tasks[indexPath]?.cancel()
-        tasks[indexPath] = nil
+        cancelImageLoad(at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -128,9 +127,11 @@ extension FeedViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        indexPaths.forEach { indexPath in
-            tasks[indexPath]?.cancel()
-            tasks[indexPath] = nil
-        }
+        indexPaths.forEach { cancelImageLoad(at: $0) }
+    }
+    
+    private func cancelImageLoad(at indexPath: IndexPath) {
+        tasks[indexPath]?.cancel()
+        tasks[indexPath] = nil
     }
 }
