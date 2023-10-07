@@ -73,6 +73,8 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         collectionView.refreshControl = refreshControl
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
         collectionView.prefetchDataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
         
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         
