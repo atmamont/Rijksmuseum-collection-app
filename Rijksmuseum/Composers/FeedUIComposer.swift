@@ -38,10 +38,20 @@ final class FeedUIComposer {
         }
     }
     
+    private struct CacheSettings {
+        static let memoryImageCacheSize = 1024 * 1024 * 1
+        static let diskImageCacheSize = 1024 * 1024 * 300
+    }
+    
     static func makeFeedViewController() -> FeedViewController {
         let httpClient = RMAuthorizedHttpClient(URLSessionHTTPClient())
         let feedLoader = RemoteFeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
-        let imageLoader = DummyImageDataLoader()
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = URLCache(memoryCapacity: CacheSettings.memoryImageCacheSize, diskCapacity: CacheSettings.diskImageCacheSize)
+        let urlSession = URLSession(configuration: configuration)
+        let imageLoader = RemoteImageDataLoaderMainThreadDispatcher(imageLoader: RemoteImageDataLoader(session: urlSession))
+        
         let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
         return feedViewController
     }
