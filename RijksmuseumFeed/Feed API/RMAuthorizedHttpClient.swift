@@ -14,7 +14,7 @@ public final class RMAuthorizedHttpClient: HTTPClient {
         ["key": "0fiuZFh4"]
     }
 
-    public init(client: HTTPClient) {
+    public init(_ client: HTTPClient) {
         self.client = client
     }
     

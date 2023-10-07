@@ -11,15 +11,10 @@ import UIKit
 
 final class UIComposer {
     static func makeFeedViewController() -> FeedViewController {
-        let apiLoader = UIComposer.makeRemoteFeedLoader()
-        let feedViewController = FeedViewController(loader: apiLoader, imageLoader: DummyImageDataLoader())
+        let httpClient = RMAuthorizedHttpClient(URLSessionHTTPClient())
+        let loader = RemoteFeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
+        let feedViewController = FeedViewController(loader: loader, imageLoader: DummyImageDataLoader())
         return feedViewController
-    }
-    
-    private static func makeRemoteFeedLoader() -> FeedLoader {
-        let httpClient = RMAuthorizedHttpClient(client: URLSessionHTTPClient())
-        let loader = RemoteFeedLoader(client: httpClient)
-        return loader
     }
 }
 
