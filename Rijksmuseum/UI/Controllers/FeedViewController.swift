@@ -43,7 +43,10 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         collectionView.dataSource = self
         
         collectionView.refreshControl = refreshController.refreshControl
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         refreshController.load()
     }
         
