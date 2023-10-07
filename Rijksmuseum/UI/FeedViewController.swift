@@ -13,16 +13,6 @@ struct FeedItemViewModel {
     let imageName: String
 }
 
-protocol ImageDataLoaderTask {
-    func cancel()
-}
-
-protocol ImageDataLoader {
-    typealias Result = Swift.Result<Data, Error>
-    
-    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> ImageDataLoaderTask
-}
-
 class FeedViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
     var feed = [FeedItem]()
     let refreshControl = UIRefreshControl()
