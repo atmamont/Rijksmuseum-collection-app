@@ -28,19 +28,25 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
     let refreshControl = UIRefreshControl()
     var tasks = [IndexPath: ImageDataLoaderTask]()
     
-    var feedLoader: FeedLoader?
-    var imageLoader: ImageDataLoader?
+    var feedLoader: FeedLoader
+    var imageLoader: ImageDataLoader
     
-    convenience init(loader: FeedLoader, imageLoader: ImageDataLoader) {
-        self.init(collectionViewLayout: UICollectionViewLayout())
+    init(loader: FeedLoader, imageLoader: ImageDataLoader) {
         self.feedLoader = loader
         self.imageLoader = imageLoader
+        
+        super.init(collectionViewLayout: compositionalLayout)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     @objc private func load() {
         refreshControl.beginRefreshing()
 
-        feedLoader?.load { [weak self] result in
+        feedLoader.load { [weak self] result in
             switch result {
             case let .success(feed):
                 self?.feed = feed
@@ -106,7 +112,7 @@ extension FeedViewController {
         cell.configure(with: model)
         cell.imageContainer.startShimmering()
         cell.imageView.image = nil
-        tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl) { [weak cell] result in
+        tasks[indexPath] = imageLoader.loadImageData(from: model.imageUrl) { [weak cell] result in
             if let data = try? result.get() {
                 cell?.imageView.image = UIImage.init(data: data, scale: 1.0)
             }
@@ -122,7 +128,7 @@ extension FeedViewController {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
             let model = feed[indexPath.item]
-            tasks[indexPath] = imageLoader?.loadImageData(from: model.imageUrl, completion: { _ in })
+            tasks[indexPath] = imageLoader.loadImageData(from: model.imageUrl, completion: { _ in })
         }
     }
     

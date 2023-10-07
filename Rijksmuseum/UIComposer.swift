@@ -11,9 +11,8 @@ import UIKit
 
 final class UIComposer {
     static func makeFeedViewController() -> FeedViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        let feedViewController = storyboard.instantiateInitialViewController() as! FeedViewController
-        feedViewController.feedLoader = UIComposer.makeRemoteFeedLoader()
+        let apiLoader = UIComposer.makeRemoteFeedLoader()
+        let feedViewController = FeedViewController(loader: apiLoader, imageLoader: DummyImageDataLoader())
         return feedViewController
     }
     
@@ -21,5 +20,17 @@ final class UIComposer {
         let httpClient = RMAuthorizedHttpClient(client: URLSessionHTTPClient())
         let loader = RemoteFeedLoader(client: httpClient)
         return loader
+    }
+}
+
+private class DummyImageDataLoader: ImageDataLoader {
+    class DummyImageDataLoaderTask: ImageDataLoaderTask {
+        func cancel() {
+            // dummy
+        }
+    }
+    func loadImageData(from url: URL, completion: @escaping (ImageDataLoader.Result) -> Void) -> ImageDataLoaderTask {
+        completion(.success(Data()))
+        return DummyImageDataLoaderTask()
     }
 }

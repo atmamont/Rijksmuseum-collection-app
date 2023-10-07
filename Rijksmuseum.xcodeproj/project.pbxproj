@@ -24,7 +24,6 @@
 		756BB84E2ACD5B5100807FF7 /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */; };
 		757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */; };
 		757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */; };
-		757CB08A2ACC2C4F00C8BB1A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757CB0882ACC2C4F00C8BB1A /* Main.storyboard */; };
 		757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */; };
 		757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */; };
 		757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */; };
@@ -93,7 +92,6 @@
 		757CB07F2ACC2C4F00C8BB1A /* Rijksmuseum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rijksmuseum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
-		757CB0892ACC2C4F00C8BB1A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		757CB08E2ACC2C5000C8BB1A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		757CB0902ACC2C5000C8BB1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -231,7 +229,6 @@
 			children = (
 				757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */,
 				757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */,
-				757CB0882ACC2C4F00C8BB1A /* Main.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -423,7 +420,6 @@
 			files = (
 				757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */,
 				757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */,
-				757CB08A2ACC2C4F00C8BB1A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,14 +506,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		757CB0882ACC2C4F00C8BB1A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				757CB0892ACC2C4F00C8BB1A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -790,7 +778,6 @@
 				INFOPLIST_FILE = Rijksmuseum/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -820,7 +807,6 @@
 				INFOPLIST_FILE = Rijksmuseum/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
