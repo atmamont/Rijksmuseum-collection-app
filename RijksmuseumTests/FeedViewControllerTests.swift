@@ -185,7 +185,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
 
     func makeFeedItem(title: String, imageUrl: URL) -> FeedItem {
-        FeedItem(id: UUID(), title: title, imageUrl: imageUrl)
+        FeedItem(id: UUID().uuidString, title: title, imageUrl: imageUrl)
     }
     
     private class LoaderSpy: FeedLoader, ImageDataLoader {

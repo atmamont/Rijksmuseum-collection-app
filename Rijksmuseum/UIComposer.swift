@@ -18,6 +18,8 @@ final class UIComposer {
     }
     
     private static func makeRemoteFeedLoader() -> FeedLoader {
-        RemoteFeedLoader(client: URLSessionHTTPClient())
+        let httpClient = RMAuthorizedHttpClient(client: URLSessionHTTPClient())
+        let loader = RemoteFeedLoader(client: httpClient)
+        return loader
     }
 }

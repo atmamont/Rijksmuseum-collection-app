@@ -31,6 +31,7 @@
 		75BB79AA2AD0580200727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
 		75BB79AB2AD0587F00727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
 		75E455092AD1482000CD3D32 /* UIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E455082AD1482000CD3D32 /* UIComposer.swift */; };
+		75E4550D2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E4550C2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		757CB0C02ACC350800C8BB1A /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		75BB79A92AD0580200727138 /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
 		75E455082AD1482000CD3D32 /* UIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIComposer.swift; sourceTree = "<group>"; };
+		75E4550C2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMAuthorizedHttpClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +252,7 @@
 			children = (
 				757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */,
 				757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */,
+				75E4550C2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift */,
 				753641392ACF1E3500F3050A /* RemoteFeedLoader.swift */,
 				7536413B2ACF1E6100F3050A /* RemoteFeedItem.swift */,
 			);
@@ -438,6 +441,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75E4550D2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift in Sources */,
 				7536413A2ACF1E3500F3050A /* RemoteFeedLoader.swift in Sources */,
 				7536413C2ACF1E6100F3050A /* RemoteFeedItem.swift in Sources */,
 				756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */,

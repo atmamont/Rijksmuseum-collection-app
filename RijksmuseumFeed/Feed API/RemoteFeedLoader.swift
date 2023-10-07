@@ -11,9 +11,10 @@ public class RemoteFeedLoader: FeedLoader {
     public typealias Result = Swift.Result<[FeedItem], Swift.Error>
     
     private let client: HTTPClient
-    private let baseUrl = URL(string: "https://www.rijksmuseum.nl")!
-    private let requestPath = "/api/nl/collection"
     
+    private let requestPath = "/api/nl/collection"
+    private let baseUrl = URL(string: "https://www.rijksmuseum.nl")!
+
     public enum Error: Swift.Error {
         case invalidData
         case connectivity

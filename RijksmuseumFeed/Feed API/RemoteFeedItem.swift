@@ -8,7 +8,7 @@
 import Foundation
 
 public struct RemoteFeedItem: Decodable {
-    let id: UUID
+    let id: String
     let title: String
     let longTitle: String
     let principalOrFirstMaker: String
