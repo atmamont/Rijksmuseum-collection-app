@@ -55,6 +55,10 @@ final class FeedItemCell: UICollectionViewCell {
 //        fadeIn(UIImage(named: model.imageName))
     }
     
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         

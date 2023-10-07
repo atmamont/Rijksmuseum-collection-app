@@ -24,8 +24,8 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
@@ -42,17 +42,6 @@
                BlueprintIdentifier = "757CB0942ACC2C5000C8BB1A"
                BuildableName = "RijksmuseumTests.xctest"
                BlueprintName = "RijksmuseumTests"
-               ReferencedContainer = "container:Rijksmuseum.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "757CB09E2ACC2C5000C8BB1A"
-               BuildableName = "RijksmuseumUITests.xctest"
-               BlueprintName = "RijksmuseumUITests"
                ReferencedContainer = "container:Rijksmuseum.xcodeproj">
             </BuildableReference>
          </TestableReference>

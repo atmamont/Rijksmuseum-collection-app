@@ -138,7 +138,7 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.renderedImageData, imageData1)
     }
 
-    func test_feed_rendersImageLoadedFromURLWhenFeedItesIsNearlyVisible() {
+    func test_feed_rendersImageLoadedFromURLWhenFeedItemIsNearlyVisible() {
         let (sut, loader) = makeSUT()
         let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
         let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)

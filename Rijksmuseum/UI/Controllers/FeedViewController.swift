@@ -8,6 +8,7 @@
 import UIKit
 import RijksmuseumFeed
 
+
 struct FeedItemViewModel {
     let title: String
     let imageName: String
@@ -19,7 +20,7 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
             collectionView.reloadData()
         }
     }
-    var tasks = [IndexPath: ImageDataLoaderTask]()
+    var cellControllers = [IndexPath: FeedCellController]()
     
     var refreshController: FeedRefreshViewController
     var imageLoader: ImageDataLoader
@@ -82,18 +83,9 @@ extension FeedViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedItemCell", for: indexPath) as! FeedItemCell
-        let model = feed[indexPath.row]
-        cell.configure(with: model)
-        cell.imageContainer.startShimmering()
-        cell.imageView.image = nil
-        tasks[indexPath] = imageLoader.loadImageData(from: model.imageUrl) { [weak cell] result in
-            if let data = try? result.get() {
-                cell?.imageView.image = UIImage.init(data: data, scale: 1.0)
-            }
-            cell?.imageContainer.stopShimmering()
-        }
-        return cell
+        let cellController = cellController(forRowAt: indexPath)
+        cellControllers[indexPath] = cellController
+        return cellController.view(for: indexPath)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -102,17 +94,23 @@ extension FeedViewController {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            let model = feed[indexPath.item]
-            tasks[indexPath] = imageLoader.loadImageData(from: model.imageUrl, completion: { _ in })
+            cellControllers[indexPath] = cellController(forRowAt: indexPath)
+            cellControllers[indexPath]?.preload()
         }
     }
     
+    private func cellController(forRowAt indexPath: IndexPath) -> FeedCellController {
+        FeedCellController(
+            collectionView: collectionView,
+            model: feed[indexPath.item],
+            imageLoader: imageLoader)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        indexPaths.forEach { cancelImageLoad(at: $0) }
+        indexPaths.forEach(cancelImageLoad)
     }
     
     private func cancelImageLoad(at indexPath: IndexPath) {
-        tasks[indexPath]?.cancel()
-        tasks[indexPath] = nil
+        cellControllers[indexPath]?.cancelLoad()
     }
 }
