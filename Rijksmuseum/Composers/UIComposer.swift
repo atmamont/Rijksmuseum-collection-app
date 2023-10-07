@@ -13,7 +13,7 @@ final class UIComposer {
     static func makeFeedViewController() -> FeedViewController {
         let httpClient = RMAuthorizedHttpClient(URLSessionHTTPClient())
         let loader = RemoteFeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
-        let feedViewController = FeedViewController(loader: loader, imageLoader: DummyImageDataLoader())
+        let feedViewController = FeedViewController(feedLoader: loader, imageLoader: DummyImageDataLoader())
         return feedViewController
     }
 }

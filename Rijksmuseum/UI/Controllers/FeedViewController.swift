@@ -14,15 +14,19 @@ struct FeedItemViewModel {
 }
 
 class FeedViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
-    var feed = [FeedItem]()
-    let refreshControl = UIRefreshControl()
+    var feed = [FeedItem]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     var tasks = [IndexPath: ImageDataLoaderTask]()
     
-    var feedLoader: FeedLoader
+    var refreshController: FeedRefreshViewController
     var imageLoader: ImageDataLoader
     
-    init(loader: FeedLoader, imageLoader: ImageDataLoader) {
-        self.feedLoader = loader
+    init(feedLoader: FeedLoader,
+         imageLoader: ImageDataLoader) {
+        self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
         
         super.init(collectionViewLayout: compositionalLayout)
@@ -33,42 +37,21 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func load() {
-        refreshControl.beginRefreshing()
-
-        feedLoader.load { [weak self] result in
-            switch result {
-            case let .success(feed):
-                self?.feed = feed
-                self?.collectionView.reloadData()
-            case let .failure(error):
-                print(error)
-            }
-            self?.refreshControl.endRefreshing()
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if feed.isEmpty {
-            refreshControl.beginRefreshing()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         collectionView.collectionViewLayout = compositionalLayout
-        collectionView.refreshControl = refreshControl
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
+        collectionView.refreshControl = refreshController.refreshControl
+        refreshController.onFeedRefresh = { [weak self] feed in
+            self?.feed = feed
+        }
         
-        load()
+        refreshController.load()
     }
         
     //MARK: - Layout
