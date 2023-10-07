@@ -23,21 +23,9 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         }
     }
 
-    init(feedLoader: FeedLoader,
-         imageLoader: ImageDataLoader) {
-        self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
-        
+    init(refreshController: FeedRefreshViewController) {
+        self.refreshController = refreshController
         super.init(collectionViewLayout: compositionalLayout)
-
-        refreshController.onFeedRefresh = { [weak self] feed in
-            guard let self else { return }
-            self.feed = feed.map {
-                FeedCellController(
-                    collectionView: self.collectionView,
-                    model: $0,
-                    imageLoader: imageLoader)
-            }
-        }
     }
     
     @available(*, unavailable)

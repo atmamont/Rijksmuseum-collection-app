@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: scene)
 
-        let feedViewController = UIComposer.makeFeedViewController()
+        let feedViewController = FeedUIComposer.makeFeedViewController()
         let rootViewController = UINavigationController(rootViewController: feedViewController)
 
         window.rootViewController = rootViewController
