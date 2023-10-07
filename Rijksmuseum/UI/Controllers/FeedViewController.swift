@@ -15,22 +15,29 @@ struct FeedItemViewModel {
 }
 
 class FeedViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
-    var feed = [FeedItem]() {
+    private let refreshController: FeedRefreshViewController
+    
+    var feed = [FeedCellController]() {
         didSet {
             collectionView.reloadData()
         }
     }
-    var cellControllers = [IndexPath: FeedCellController]()
-    
-    var refreshController: FeedRefreshViewController
-    var imageLoader: ImageDataLoader
-    
+
     init(feedLoader: FeedLoader,
          imageLoader: ImageDataLoader) {
         self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
-        self.imageLoader = imageLoader
         
         super.init(collectionViewLayout: compositionalLayout)
+
+        refreshController.onFeedRefresh = { [weak self] feed in
+            guard let self else { return }
+            self.feed = feed.map {
+                FeedCellController(
+                    collectionView: self.collectionView,
+                    model: $0,
+                    imageLoader: imageLoader)
+            }
+        }
     }
     
     @available(*, unavailable)
@@ -48,9 +55,6 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         collectionView.dataSource = self
         
         collectionView.refreshControl = refreshController.refreshControl
-        refreshController.onFeedRefresh = { [weak self] feed in
-            self?.feed = feed
-        }
         
         refreshController.load()
     }
@@ -83,9 +87,7 @@ extension FeedViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cellController = cellController(forRowAt: indexPath)
-        cellControllers[indexPath] = cellController
-        return cellController.view(for: indexPath)
+        cellController(forRowAt: indexPath).view(for: indexPath)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -94,16 +96,12 @@ extension FeedViewController {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            cellControllers[indexPath] = cellController(forRowAt: indexPath)
-            cellControllers[indexPath]?.preload()
+            cellController(forRowAt: indexPath).preload()
         }
     }
     
     private func cellController(forRowAt indexPath: IndexPath) -> FeedCellController {
-        FeedCellController(
-            collectionView: collectionView,
-            model: feed[indexPath.item],
-            imageLoader: imageLoader)
+        feed[indexPath.item]
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -111,6 +109,6 @@ extension FeedViewController {
     }
     
     private func cancelImageLoad(at indexPath: IndexPath) {
-        cellControllers[indexPath]?.cancelLoad()
+        cellController(forRowAt: indexPath).cancelLoad()
     }
 }
