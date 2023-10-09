@@ -42,14 +42,14 @@ final class FeedViewControllerTests: XCTestCase {
         let item3 = makeFeedItem(title: "Test item 3", imageUrl: anyURL())
 
         sut.loadViewIfNeeded()
-        assertThat(sut, renders: [])
+        assertThat(sut, renders: [], inSection: 0)
         
         loader.completeFeedLoading(with: [item1])
-        assertThat(sut, renders: [item1])
+        assertThat(sut, renders: [item1], inSection: 0)
 
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoading(with: [item1, item2, item3])
-        assertThat(sut, renders: [item1, item2, item3])
+        assertThat(sut, renders: [item1, item2, item3], inSection: 0)
     }
     
     func test_loadCompletion_doesNotBreakLoadedFeedOnReceivingLoadingError() {
@@ -58,12 +58,15 @@ final class FeedViewControllerTests: XCTestCase {
 
         sut.loadViewIfNeeded()
         loader.completeFeedLoading(with: [item1])
-        assertThat(sut, renders: [item1])
+        assertThat(sut, renders: [item1], inSection: 0)
 
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoading(with: anyNSError())
-        assertThat(sut, renders: [item1])
+        assertThat(sut, renders: [item1], inSection: 0)
     }
+    
+    private let indexPath00 = IndexPath(item: 0, section: 0)
+    private let indexPath01 = IndexPath(item: 1, section: 0)
     
     func test_feed_loadsImageUrlWhenVisible() {
         let (sut, loader) = makeSUT()
@@ -73,7 +76,7 @@ final class FeedViewControllerTests: XCTestCase {
         loader.completeFeedLoading(with: [item1])
         XCTAssertEqual(loader.loadedImageUrls, [])
         
-        sut.simulateFeedItemVisible(at: 0)
+        sut.simulateFeedItemVisible(at: indexPath00)
         XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl])
     }
     
@@ -86,10 +89,10 @@ final class FeedViewControllerTests: XCTestCase {
         loader.completeFeedLoading(with: [item1, item2])
         XCTAssertEqual(loader.canceledImageUrls, [])
         
-        sut.simulateFeedItemNotVisible(at: 0)
+        sut.simulateFeedItemNotVisible(at: indexPath00)
         XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl])
         
-        sut.simulateFeedItemNotVisible(at: 1)
+        sut.simulateFeedItemNotVisible(at: indexPath01)
         XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl, item2.imageUrl])
     }
     
@@ -100,8 +103,8 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoading(with: [item1, item2])
-        let view0 = sut.simulateFeedItemVisible(at: 0)
-        let view1 = sut.simulateFeedItemVisible(at: 1)
+        let view0 = sut.simulateFeedItemVisible(at: indexPath00)
+        let view1 = sut.simulateFeedItemVisible(at: indexPath01)
         
         XCTAssertEqual(view0?.isShowingLoadingIndicator, true)
         XCTAssertEqual(view1?.isShowingLoadingIndicator, true)
@@ -122,8 +125,8 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoading(with: [item1, item2])
-        let view0 = sut.simulateFeedItemVisible(at: 0)
-        let view1 = sut.simulateFeedItemVisible(at: 1)
+        let view0 = sut.simulateFeedItemVisible(at: indexPath00)
+        let view1 = sut.simulateFeedItemVisible(at: indexPath01)
         XCTAssertEqual(view0?.renderedImageData, .none)
         XCTAssertEqual(view1?.renderedImageData, .none)
         
@@ -147,13 +150,13 @@ final class FeedViewControllerTests: XCTestCase {
         loader.completeFeedLoading(with: [item1, item2])
         XCTAssertEqual(loader.loadedImageUrls, [])
         
-        sut.simulateFeedItemNearlyVisible(at: 0)
+        sut.simulateFeedItemNearlyVisible(at: indexPath00)
         XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl])
 
-        sut.simulateFeedItemNearlyVisible(at: 1)
+        sut.simulateFeedItemNearlyVisible(at: indexPath01)
         XCTAssertEqual(loader.loadedImageUrls, [item1.imageUrl, item2.imageUrl])
         
-        sut.simulateFeedItemNotNearlyVisible(at: 1)
+        sut.simulateFeedItemNotNearlyVisible(at: indexPath01)
         XCTAssertEqual(loader.canceledImageUrls, [item2.imageUrl])
 
     }
@@ -172,22 +175,22 @@ final class FeedViewControllerTests: XCTestCase {
         return (sut, loader)
     }
     
-    func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at index: Int, file: StaticString = #file, line: UInt = #line) {
-        let view = sut.feedItemView(at: index) as? FeedItemCell
+    func assertThat(_ sut: FeedViewController, hasViewConfiguredForItem item: FeedItem, at indexPath: IndexPath, file: StaticString = #file, line: UInt = #line) {
+        let view = sut.feedItemView(at: indexPath) as? FeedItemCell
         XCTAssertNotNil(view, file: file, line: line)
         XCTAssertEqual(view?.titleLabel.text, item.title, file: file, line: line)
     }
     
-    func assertThat(_ sut: FeedViewController, renders items: [FeedItem], file: StaticString = #file, line: UInt = #line) {
-        XCTAssertEqual(items.count, sut.numberOfRenderedFeedItems())
+    func assertThat(_ sut: FeedViewController, renders items: [FeedItem], inSection section: Int, file: StaticString = #file, line: UInt = #line) {
+        XCTAssertEqual(items.count, sut.numberOfRenderedFeedItems(in: section))
         
         items.enumerated().forEach { index, item in
-            assertThat(sut, hasViewConfiguredForItem: item, at: index)
+            assertThat(sut, hasViewConfiguredForItem: item, at: IndexPath(item: index, section: section))
         }
     }
 
-    func makeFeedItem(title: String, imageUrl: URL) -> FeedItem {
-        FeedItem(id: UUID().uuidString, title: title, imageUrl: imageUrl)
+    func makeFeedItem(title: String, imageUrl: URL, maker: String = "Maker1") -> FeedItem {
+        FeedItem(id: UUID().uuidString, title: title, imageUrl: imageUrl, maker: maker)
     }
     
     private class LoaderSpy: FeedLoader, ImageDataLoader {
@@ -196,7 +199,7 @@ final class FeedViewControllerTests: XCTestCase {
         }
         var requestFeedCompletions = [(FeedLoader.Result) -> Void]()
         
-        func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
+        func load(page: Int = 1, completion: @escaping ((FeedLoader.Result) -> Void)) {
             requestFeedCompletions.append(completion)
         }
         
@@ -257,29 +260,26 @@ private extension FeedViewController {
     }
     
     @discardableResult
-    func simulateFeedItemVisible(at index: Int) -> FeedItemCell? {
-        feedItemView(at: index) as? FeedItemCell
+    func simulateFeedItemVisible(at indexPath: IndexPath) -> FeedItemCell? {
+        feedItemView(at: indexPath) as? FeedItemCell
     }
     
-    func simulateFeedItemNotVisible(at index: Int) {
-        let view = simulateFeedItemVisible(at: index)
+    func simulateFeedItemNotVisible(at indexPath: IndexPath) {
+        let view = simulateFeedItemVisible(at: indexPath)
         
         let delegate = collectionView.delegate
-        let indexPath = IndexPath(item: index, section: defaultSection())
         delegate?.collectionView?(collectionView, didEndDisplaying: view!, forItemAt: indexPath)
     }
     
-    func simulateFeedItemNearlyVisible(at index: Int) {
+    func simulateFeedItemNearlyVisible(at indexPath: IndexPath) {
         let ds = collectionView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: defaultSection())
         ds?.collectionView(collectionView, prefetchItemsAt: [indexPath])
     }
 
-    func simulateFeedItemNotNearlyVisible(at index: Int) {
-        simulateFeedItemNearlyVisible(at: index)
+    func simulateFeedItemNotNearlyVisible(at indexPath: IndexPath) {
+        simulateFeedItemNearlyVisible(at: indexPath)
         
         let ds = collectionView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: defaultSection())
         ds?.collectionView?(collectionView, cancelPrefetchingForItemsAt: [indexPath])
     }
 
@@ -287,15 +287,16 @@ private extension FeedViewController {
         collectionView.refreshControl?.isRefreshing ?? false
     }
     
-    func defaultSection() -> Int { 0 }
-    
-    func numberOfRenderedFeedItems() -> Int {
-        collectionView(collectionView, numberOfItemsInSection: defaultSection())
+    func numberOfRenderedFeedItems(in section: Int) -> Int {
+        guard 
+                let ds = collectionView.dataSource,
+              ds.numberOfSections!(in: collectionView) > 0 else { return 0 }
+        
+        return ds.collectionView(collectionView, numberOfItemsInSection: section)
     }
     
-    func feedItemView(at index: Int) -> UIView? {
+    func feedItemView(at indexPath: IndexPath) -> UIView? {
         let ds = collectionView.dataSource
-        let indexPath = IndexPath(item: index, section: defaultSection())
         let view = ds?.collectionView(collectionView, cellForItemAt: indexPath)
         return view
     }

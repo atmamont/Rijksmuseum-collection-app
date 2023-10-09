@@ -15,8 +15,8 @@ final class RemoteFeedLoaderMainThreadDispatcher: FeedLoader {
         self.loader = loader
     }
     
-    func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
-        loader.load { result in
+    func load(page: Int = 0, completion: @escaping ((FeedLoader.Result) -> Void)) {
+        loader.load(page: page) { result in
             if Thread.isMainThread {
                 completion(result)
             } else {

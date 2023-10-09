@@ -116,7 +116,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     private func makeItem(title: String, longTitle: String, principalOrFirstMaker: String, imageUrl: URL) -> (item: FeedItem, json: [String: Any]) {
         let id = UUID().uuidString
-        let item = FeedItem(id: id, title: title, imageUrl: imageUrl)
+        let item = FeedItem(id: id, title: title, imageUrl: imageUrl, maker: principalOrFirstMaker)
         
         let json = [
             "id": id,

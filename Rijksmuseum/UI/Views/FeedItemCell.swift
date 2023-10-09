@@ -47,10 +47,12 @@ final class FeedItemCell: UICollectionViewCell {
     }
 
     func fadeIn(_ image: UIImage?) {
-        imageView.image = image
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue) { [weak self] in
+            self?.imageView.image = image
+        }
         
         UIView.animate(
-            withDuration: 0.3,
+            withDuration: 0.1,
             animations: {
                 self.imageView.alpha = 1
             },

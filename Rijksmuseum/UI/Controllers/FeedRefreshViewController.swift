@@ -11,13 +11,14 @@ import RijksmuseumFeed
 final class FeedRefreshViewController: UIViewController {
     private(set) lazy var refreshControl = {
         let control = UIRefreshControl()
-        control.addTarget(self, action: #selector(load), for: .valueChanged)
+        control.addTarget(self, action: #selector(pullToResfresh), for: .valueChanged)
         return control
     }()
     
     private let feedLoader: FeedLoader
     
     var onFeedRefresh: (([FeedItem]) -> Void)?
+    var resetDataSource: (() -> Void)?
     
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
@@ -33,10 +34,10 @@ final class FeedRefreshViewController: UIViewController {
         self.view = refreshControl
     }
     
-    @objc func load() {
+    func load(page: Int = 1) {
         refreshControl.beginRefreshing()
 
-        feedLoader.load { [weak self] result in
+        feedLoader.load(page: page) { [weak self] result in
             switch result {
             case let .success(feed):
                 self?.onFeedRefresh?(feed)
@@ -45,6 +46,10 @@ final class FeedRefreshViewController: UIViewController {
             }
             self?.refreshControl.endRefreshing()
         }
-
+    }
+    
+    @objc private func pullToResfresh() {
+        resetDataSource?()
+        load(page: 1)
     }
 }

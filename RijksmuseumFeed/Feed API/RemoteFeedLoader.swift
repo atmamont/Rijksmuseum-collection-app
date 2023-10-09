@@ -24,8 +24,9 @@ public class RemoteFeedLoader: FeedLoader {
         self.client = client
     }
     
-    public func load(completion: @escaping (Result) -> Void) {
-        let requestUrl = baseUrl.appending(path: requestPath)
+    public func load(page: Int = 0, completion: @escaping (Result) -> Void) {
+        var requestUrl = baseUrl.appending(path: requestPath)
+        requestUrl.append(queryItems: makeQueryItems(page: page))
         client.get(from: requestUrl) { result in
             switch result {
             case let .success((remoteData, response)):
@@ -43,6 +44,12 @@ public class RemoteFeedLoader: FeedLoader {
         } catch {
             return .failure(error)
         }
+    }
+    
+    private func makeQueryItems(page: Int) -> [URLQueryItem] {
+        return [URLQueryItem(name: "imgonly", value: "true"),
+                URLQueryItem(name: "p", value: "\(page)"),
+                URLQueryItem(name: "s", value: "artist")]
     }
 }
 

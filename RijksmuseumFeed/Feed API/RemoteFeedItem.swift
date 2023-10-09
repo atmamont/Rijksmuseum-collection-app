@@ -26,7 +26,8 @@ extension Array where Element == RemoteFeedItem {
             FeedItem(
                 id: $0.id,
                 title: $0.title,
-                imageUrl: $0.headerImage.url)
+                imageUrl: $0.webImage.url,
+                maker: $0.principalOrFirstMaker)
         }
     }
 }

@@ -14,18 +14,20 @@ struct FeedItemViewModel {
     let imageName: String
 }
 
-class FeedViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
+class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
     private let refreshController: FeedRefreshViewController
     
-    var feed = [FeedCellController]() {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
+    var dataSource: FeedDataSource?
+    var currentPage = 1
+    lazy var collectionView: UICollectionView = {
+        let view = UICollectionView(frame: .zero, collectionViewLayout: compositionalLayout)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     init(refreshController: FeedRefreshViewController) {
         self.refreshController = refreshController
-        super.init(collectionViewLayout: compositionalLayout)
+        super.init(nibName: nil, bundle: nil)
     }
     
     @available(*, unavailable)
@@ -40,16 +42,15 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView.dataSource = dataSource
         
         collectionView.refreshControl = refreshController.refreshControl
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        
+        view.addFillingSubview(collectionView)
+
         refreshController.load()
     }
-        
+    
     //MARK: - Layout
     
     private let compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -66,33 +67,33 @@ class FeedViewController: UICollectionViewController, UICollectionViewDataSource
         let section = NSCollectionLayoutSection(group: group)
         return UICollectionViewCompositionalLayout(section: section)
     }()
-}
-
-extension FeedViewController {
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
+    
+    private func loadMore() {
+        currentPage += 1
+        refreshController.load(page: currentPage)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        feed.count
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cellController = cellController(forRowAt: indexPath), let dataSource else { return }
+        print("Checking for load more for item at \(indexPath)")
+        if dataSource.isLastItemInLastSection(cellController) {
+            print("Loading more at \(indexPath)")
+            loadMore()
+        }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        cellController(forRowAt: indexPath).view(for: indexPath)
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cancelImageLoad(at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            cellController(forRowAt: indexPath).preload()
+            cellController(forRowAt: indexPath)?.preload()
         }
     }
     
-    private func cellController(forRowAt indexPath: IndexPath) -> FeedCellController {
-        feed[indexPath.item]
+    func cellController(forRowAt indexPath: IndexPath) -> FeedCellController? {
+        dataSource?.itemIdentifier(for: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -100,6 +101,6 @@ extension FeedViewController {
     }
     
     private func cancelImageLoad(at indexPath: IndexPath) {
-        cellController(forRowAt: indexPath).cancelLoad()
+        cellController(forRowAt: indexPath)?.cancelLoad()
     }
 }

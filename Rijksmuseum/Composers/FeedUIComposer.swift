@@ -18,28 +18,35 @@ final class FeedUIComposer {
     {
         let refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         let feedViewController = FeedViewController(refreshController: refreshController)
-        
+        let dataSource = FeedDataSource(collectionView: feedViewController.collectionView) { [weak feedViewController] collectionView, indexPath, itemIdentifier in
+            feedViewController?.cellController(forRowAt: indexPath)?.view(for: indexPath)
+        }
+        refreshController.resetDataSource = { [weak dataSource] in
+            dataSource?.reset()
+        }
+
+        feedViewController.dataSource = dataSource
         refreshController.onFeedRefresh = adaptFeedModelToCellControllers(
-            destinationController: feedViewController,
+            dataSource: dataSource,
+            collectionView: feedViewController.collectionView,
             imageLoader: imageLoader)
 
         return feedViewController
     }
     
-    private static func adaptFeedModelToCellControllers(destinationController feedViewController: FeedViewController, imageLoader: ImageDataLoader) -> ([FeedItem]) -> Void {
-        return { [weak feedViewController] feed in
-            guard let feedViewController else { return }
-            feedViewController.feed = feed.map {
-                FeedCellController(
-                    collectionView: feedViewController.collectionView,
-                    model: $0,
-                    imageLoader: imageLoader)
+    private static func adaptFeedModelToCellControllers(dataSource: FeedDataSource, collectionView: UICollectionView, imageLoader: ImageDataLoader) -> ([FeedItem]) -> Void {
+        { [weak dataSource] feed in
+            guard let dataSource else { return }
+            let controllers = feed.map {
+                FeedCellController(collectionView: collectionView,
+                                   model: $0, imageLoader: imageLoader)
             }
+            dataSource.append(controllers)
         }
     }
     
     private struct CacheSettings {
-        static let memoryImageCacheSize = 1024 * 1024 * 1
+        static let memoryImageCacheSize = 1024 * 1024 * 10
         static let diskImageCacheSize = 1024 * 1024 * 300
     }
     
