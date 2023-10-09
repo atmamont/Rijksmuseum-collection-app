@@ -25,15 +25,6 @@ final class FeedItemCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        DispatchQueue.main.async { [weak self] in
-            if self?.imageView.image == nil {
-                self?.imageContainer.startShimmering()
-            }
-        }
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         

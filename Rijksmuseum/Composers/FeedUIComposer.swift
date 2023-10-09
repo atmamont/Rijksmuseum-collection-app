@@ -45,17 +45,21 @@ final class FeedUIComposer {
         }
     }
     
-    private struct CacheSettings {
-        static let memoryImageCacheSize = 1024 * 1024 * 10
-        static let diskImageCacheSize = 1024 * 1024 * 300
+    private struct Settings {
+        struct Cache {
+            static let memoryImageCacheSize = 1024 * 1024 * 10
+            static let diskImageCacheSize = 1024 * 1024 * 300
+        }
+        
+        static let apiKey = "0fiuZFh4"
     }
     
     static func makeFeedViewController() -> FeedViewController {
-        let httpClient = RMAuthorizedHttpClient(URLSessionHTTPClient())
-        let feedLoader = RemoteFeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
+        let httpClient = AuthorizedHttpClient(URLSessionHTTPClient(), authorizationKey: Settings.apiKey)
+        let feedLoader = FeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
         
         let configuration = URLSessionConfiguration.default
-        configuration.urlCache = URLCache(memoryCapacity: CacheSettings.memoryImageCacheSize, diskCapacity: CacheSettings.diskImageCacheSize)
+        configuration.urlCache = URLCache(memoryCapacity: Settings.Cache.memoryImageCacheSize, diskCapacity: Settings.Cache.diskImageCacheSize)
         let urlSession = URLSession(configuration: configuration)
         let remoteImageDataLoader = RemoteImageDataLoader(session: urlSession)
         let imageCache = MemoryImageCache(resizeBlock: ImageResizer.decodeAndResize)
@@ -64,17 +68,5 @@ final class FeedUIComposer {
         
         let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
         return feedViewController
-    }
-}
-
-private class DummyImageDataLoader: ImageDataLoader {
-    class DummyImageDataLoaderTask: ImageDataLoaderTask {
-        func cancel() {
-            // dummy
-        }
-    }
-    func loadImageData(from url: URL, completion: @escaping (ImageDataLoader.Result) -> Void) -> ImageDataLoaderTask {
-        completion(.success(Data()))
-        return DummyImageDataLoaderTask()
     }
 }

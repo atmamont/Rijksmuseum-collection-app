@@ -18,20 +18,15 @@ struct Section: Hashable, Comparable {
 
 final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCellController> {
     
-    private var items = [FeedCellController]() {
-        didSet {
-            print(items.count)
-        }
-    }
+    private var items = [FeedCellController]()
     
-    var sectionedItems = [Section: [FeedCellController]]()
-    
-    var sections: [Section] {
+    private var sectionedItems = [Section: [FeedCellController]]()
+    private var sections: [Section] {
         sectionedItems.keys.map { $0 }.sorted()
     }
     
     func append(_ newItems: [FeedCellController]) {
-        // TODO: Use items array changes not full dataset
+        // TODO: Optimization - apply changes to existing snapshot instead of creating a new one
         self.items.append(contentsOf: newItems)
         
         self.sectionedItems = items.reduce(into: [:]) { result, item in
@@ -52,20 +47,5 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
     
     func reset() {
         items = []
-    }
-        
-    private func makeSections(from items: [FeedCellController]) -> [Section] {
-        let authors = items.map { $0.model.maker }
-        return Set(authors).map(Section.init)
-    }
-    
-    private func items(in section: Section) -> [FeedCellController] {
-        let items = items.filter { $0.model.maker == section.maker }
-        return items
-    }
-    
-    func isLastItemInLastSection(_ item: FeedCellController) -> Bool {
-        guard let lastSection = sections.last else { return false }
-        return sectionedItems[lastSection]?.last == item
     }
 }

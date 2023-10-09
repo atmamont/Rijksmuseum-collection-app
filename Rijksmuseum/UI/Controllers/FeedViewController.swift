@@ -76,8 +76,9 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cellController = cellController(forRowAt: indexPath), let dataSource else { return }
         print("Checking for load more for item at \(indexPath)")
-        if dataSource.isLastItemInLastSection(cellController) {
-            print("Loading more at \(indexPath)")
+        if indexPath.section == collectionView.numberOfSections - 1,
+           indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+            collectionView.addSubview(refreshController.view)
             loadMore()
         }
     }

@@ -36,10 +36,9 @@ final class CacheImageLoader: ImageLoader {
             completion(.success(image))
         } else {
             let dataTask = fallbackLoader.loadImageData(from: url) { [weak cache] result in
-                if let data = try? result.get(),
+                if let cache, let data = try? result.get(),
                    let image = UIImage.init(data: data) {
-                    cache?.insertImage(image, for: url)
-                    completion(.success(image))
+                    completion(.success(cache.insertImage(image, for: url)))
                 } else {
                     completion(.failure(Error.noData))
                 }

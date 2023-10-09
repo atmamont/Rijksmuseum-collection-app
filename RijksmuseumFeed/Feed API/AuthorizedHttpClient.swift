@@ -7,15 +7,18 @@
 
 import Foundation
 
-public final class RMAuthorizedHttpClient: HTTPClient {
+public final class AuthorizedHttpClient: HTTPClient {
     private let client: HTTPClient
+    private let key: String
     
-    private var parameters: [String: String] {
-        ["key": "0fiuZFh4"]
-    }
-
-    public init(_ client: HTTPClient) {
+    private lazy var parameters: [String: String] = {
+//        ["key": "0fiuZFh4"]
+        ["key": self.key]
+    }()
+    
+    public init(_ client: HTTPClient, authorizationKey: String) {
         self.client = client
+        self.key = authorizationKey
     }
     
     public func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {

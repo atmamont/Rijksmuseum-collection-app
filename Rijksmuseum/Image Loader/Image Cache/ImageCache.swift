@@ -9,7 +9,7 @@ import UIKit
 
 protocol ImageCaching: AnyObject {
     func image(for url: URL) -> UIImage?
-    func insertImage(_ image: UIImage?, for url: URL)
+    func insertImage(_ image: UIImage, for url: URL) -> UIImage
     func removeImage(for url: URL)
 }
 
@@ -26,9 +26,9 @@ final class MemoryImageCache: ImageCaching {
     struct Config {
         let countLimit: Int
         let memoryLimit: Int
-        let maxImageWidth: CGFloat // this of course shoould be done smarter depending on device size and layout type
+        let maxImageWidth: CGFloat // this of course should be done smarter depending on device size and layout type
 
-        static let defaultConfig = Config(countLimit: 300, memoryLimit: 1024 * 1024 * 300, maxImageWidth: 300)
+        static let defaultConfig = Config(countLimit: 300, memoryLimit: 1024 * 1024 * 500, maxImageWidth: 500)
     }
 
     init(config: Config = Config.defaultConfig, resizeBlock: @escaping ((UIImage, CGSize) -> UIImage)) {
@@ -44,23 +44,20 @@ final class MemoryImageCache: ImageCaching {
 }
 
 extension MemoryImageCache {
-    func insertImage(_ image: UIImage?, for url: URL) {
-        guard let image = image else { return removeImage(for: url) }
+    func insertImage(_ image: UIImage, for url: URL) -> UIImage {
         let cacheImage = resizeBlock(image, resized(from: image.size))
 
-        lock.lock(); defer { lock.unlock() }
         imageCache.setObject(cacheImage as AnyObject, forKey: url as AnyObject, cost: cacheImage.diskSize)
+        return cacheImage
     }
 
     func removeImage(for url: URL) {
-        lock.lock(); defer { lock.unlock() }
         imageCache.removeObject(forKey: url as AnyObject)
     }
 }
 
 extension MemoryImageCache {
     func image(for url: URL) -> UIImage? {
-        lock.lock(); defer { lock.unlock() }
         if let image = imageCache.object(forKey: url as AnyObject) as? UIImage {
             return image
         }
@@ -80,6 +77,6 @@ extension UIImage {
     }
     
     var diskSize: Int {
-        Data(pngData() ?? Data()).count
+        pngData()?.count ?? 0
     }
 }
