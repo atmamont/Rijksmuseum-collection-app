@@ -32,8 +32,11 @@
 		75B7AF812AD1614800DEB136 /* FeedRefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF802AD1614800DEB136 /* FeedRefreshViewController.swift */; };
 		75B7AF832AD1700D00DEB136 /* FeedCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF822AD1700D00DEB136 /* FeedCellController.swift */; };
 		75B7AF852AD17A1F00DEB136 /* RemoteImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF842AD17A1F00DEB136 /* RemoteImageDataLoader.swift */; };
-		75B7AF872AD17EAC00DEB136 /* RemoteImageDataLoaderMainThreadDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF862AD17EAC00DEB136 /* RemoteImageDataLoaderMainThreadDispatcher.swift */; };
+		75B7AF872AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF862AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift */; };
 		75B7AF8B2AD1A09800DEB136 /* FeedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF8A2AD1A05E00DEB136 /* FeedDataSource.swift */; };
+		75B7AF902AD3F88400DEB136 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF8F2AD3F88400DEB136 /* ImageCache.swift */; };
+		75B7AF922AD3FADC00DEB136 /* CacheImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF912AD3FADC00DEB136 /* CacheImageLoader.swift */; };
+		75B7AF962AD4218700DEB136 /* ImageResizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7AF952AD4218700DEB136 /* ImageResizer.swift */; };
 		75BB79AA2AD0580200727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
 		75BB79AB2AD0587F00727138 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB79A92AD0580200727138 /* UIView+Shimmering.swift */; };
 		75E455092AD1482000CD3D32 /* FeedUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E455082AD1482000CD3D32 /* FeedUIComposer.swift */; };
@@ -116,8 +119,11 @@
 		75B7AF802AD1614800DEB136 /* FeedRefreshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedRefreshViewController.swift; sourceTree = "<group>"; };
 		75B7AF822AD1700D00DEB136 /* FeedCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCellController.swift; sourceTree = "<group>"; };
 		75B7AF842AD17A1F00DEB136 /* RemoteImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageDataLoader.swift; sourceTree = "<group>"; };
-		75B7AF862AD17EAC00DEB136 /* RemoteImageDataLoaderMainThreadDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageDataLoaderMainThreadDispatcher.swift; sourceTree = "<group>"; };
+		75B7AF862AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderMainThreadDispatcher.swift; sourceTree = "<group>"; };
 		75B7AF8A2AD1A05E00DEB136 /* FeedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedDataSource.swift; sourceTree = "<group>"; };
+		75B7AF8F2AD3F88400DEB136 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		75B7AF912AD3FADC00DEB136 /* CacheImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheImageLoader.swift; sourceTree = "<group>"; };
+		75B7AF952AD4218700DEB136 /* ImageResizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizer.swift; sourceTree = "<group>"; };
 		75BB79A92AD0580200727138 /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
 		75E455082AD1482000CD3D32 /* FeedUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIComposer.swift; sourceTree = "<group>"; };
 		75E4550C2AD14A3700CD3D32 /* RMAuthorizedHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMAuthorizedHttpClient.swift; sourceTree = "<group>"; };
@@ -282,9 +288,10 @@
 		75B7AF792AD1602A00DEB136 /* Image Loader */ = {
 			isa = PBXGroup;
 			children = (
+				75B7AF8E2AD3F87800DEB136 /* Image Cache */,
 				75B7AF7A2AD1603500DEB136 /* ImageDataLoader.swift */,
 				75B7AF842AD17A1F00DEB136 /* RemoteImageDataLoader.swift */,
-				75B7AF862AD17EAC00DEB136 /* RemoteImageDataLoaderMainThreadDispatcher.swift */,
+				75B7AF862AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift */,
 			);
 			path = "Image Loader";
 			sourceTree = "<group>";
@@ -324,6 +331,16 @@
 				75BB79A92AD0580200727138 /* UIView+Shimmering.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		75B7AF8E2AD3F87800DEB136 /* Image Cache */ = {
+			isa = PBXGroup;
+			children = (
+				75B7AF8F2AD3F88400DEB136 /* ImageCache.swift */,
+				75B7AF952AD4218700DEB136 /* ImageResizer.swift */,
+				75B7AF912AD3FADC00DEB136 /* CacheImageLoader.swift */,
+			);
+			path = "Image Cache";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -523,6 +540,7 @@
 			files = (
 				75B7AF762AD1579800DEB136 /* RemoteFeedLoaderMainThreadDispatcher.swift in Sources */,
 				757CB0B62ACC2DEA00C8BB1A /* AppDelegate.swift in Sources */,
+				75B7AF902AD3F88400DEB136 /* ImageCache.swift in Sources */,
 				75B7AF852AD17A1F00DEB136 /* RemoteImageDataLoader.swift in Sources */,
 				75B7AF782AD15A8800DEB136 /* UIView+Constraints.swift in Sources */,
 				75B7AF8B2AD1A09800DEB136 /* FeedDataSource.swift in Sources */,
@@ -534,7 +552,9 @@
 				757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */,
 				753641402ACFEC7D00F3050A /* FeedItemCell.swift in Sources */,
 				75E455092AD1482000CD3D32 /* FeedUIComposer.swift in Sources */,
-				75B7AF872AD17EAC00DEB136 /* RemoteImageDataLoaderMainThreadDispatcher.swift in Sources */,
+				75B7AF872AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift in Sources */,
+				75B7AF922AD3FADC00DEB136 /* CacheImageLoader.swift in Sources */,
+				75B7AF962AD4218700DEB136 /* ImageResizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -130,15 +130,15 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view0?.renderedImageData, .none)
         XCTAssertEqual(view1?.renderedImageData, .none)
         
-        let imageData0 = UIImage(data: UIColor.white.makeImage().pngData()!)!.pngData()!
-        loader.completeImageLoading(with: imageData0, at: 0)
-        XCTAssertEqual(view0?.renderedImageData, imageData0)
+        let image0 = UIColor.white.makeImage()
+        loader.completeImageLoading(with: image0, at: 0)
+        XCTAssertEqual(view0?.renderedImageData, image0.pngData())
         XCTAssertEqual(view1?.renderedImageData, .none)
 
-        let imageData1 = UIImage(data: UIColor.red.makeImage().pngData()!)!.pngData()!
-        loader.completeImageLoading(with: imageData1, at: 1)
-        XCTAssertEqual(view0?.renderedImageData, imageData0)
-        XCTAssertEqual(view1?.renderedImageData, imageData1)
+        let image1 = UIColor.red.makeImage()
+        loader.completeImageLoading(with: image1, at: 1)
+        XCTAssertEqual(view0?.renderedImageData, image0.pngData())
+        XCTAssertEqual(view1?.renderedImageData, image1.pngData())
     }
 
     func test_feed_rendersImageLoadedFromURLWhenFeedItemIsNearlyVisible() {
@@ -193,7 +193,7 @@ final class FeedViewControllerTests: XCTestCase {
         FeedItem(id: UUID().uuidString, title: title, imageUrl: imageUrl, maker: maker)
     }
     
-    private class LoaderSpy: FeedLoader, ImageDataLoader {
+    private class LoaderSpy: FeedLoader, ImageLoader {
         var requestFeedCallCount: Int {
             requestFeedCompletions.count
         }
@@ -212,29 +212,30 @@ final class FeedViewControllerTests: XCTestCase {
         }
         
         // MARK: - ImageDataLoader
-        private struct ImageDataLoaderTaskSpy: ImageDataLoaderTask {
+        private struct ImageLoaderTaskSpy: ImageLoaderTask {
             let callback: () -> Void
             func cancel() {
                 callback()
             }
         }
         
-        var imageRequests = [(url: URL, completion: (ImageDataLoader.Result) -> Void)]()
+        var imageRequests = [(url: URL, completion: (ImageLoader.Result) -> Void)]()
         var loadedImageUrls: [URL] {
             imageRequests.map { $0.url }
         }
         var canceledImageUrls = [URL]()
         
-        func loadImageData(from url: URL, completion: @escaping (ImageDataLoader.Result) -> Void) -> ImageDataLoaderTask {
+        func loadImage(from url: URL, completion: @escaping (ImageLoader.Result) -> Void) -> ImageLoaderTask {
             imageRequests.append((url: url, completion: completion))
+            print("Loading image \(url)")
             
-            return ImageDataLoaderTaskSpy { [weak self] in
+            return ImageLoaderTaskSpy { [weak self] in
                 self?.canceledImageUrls.append(url)
             }
         }
         
-        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-            imageRequests[index].completion(.success(imageData))
+        func completeImageLoading(with image: UIImage = UIImage(), at index: Int = 0) {
+            imageRequests[index].completion(.success(image))
         }
 
         func completeImageLoading(with error: Error, at index: Int = 0) {
@@ -288,8 +289,7 @@ private extension FeedViewController {
     }
     
     func numberOfRenderedFeedItems(in section: Int) -> Int {
-        guard 
-                let ds = collectionView.dataSource,
+        guard let ds = collectionView.dataSource,
               ds.numberOfSections!(in: collectionView) > 0 else { return 0 }
         
         return ds.collectionView(collectionView, numberOfItemsInSection: section)

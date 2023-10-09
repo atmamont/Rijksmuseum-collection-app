@@ -11,10 +11,10 @@ import RijksmuseumFeed
 final class FeedCellController {
     private let collectionView: UICollectionView
     private(set) var model: FeedItem
-    private let imageLoader: ImageDataLoader
-    private var task: ImageDataLoaderTask?
+    private let imageLoader: ImageLoader
+    private var task: ImageLoaderTask?
     
-    init(collectionView: UICollectionView, model: FeedItem, imageLoader: ImageDataLoader) {
+    init(collectionView: UICollectionView, model: FeedItem, imageLoader: ImageLoader) {
         self.model = model
         self.imageLoader = imageLoader
         self.collectionView = collectionView
@@ -25,17 +25,9 @@ final class FeedCellController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: indexPath) as! FeedItemCell
         cell.configure(with: model)
         cell.imageContainer.startShimmering()
-        self.task = imageLoader.loadImageData(from: model.imageUrl) { [weak cell] result in
-            if let data = try? result.get() {
-                DispatchQueue.global().async {
-                    let image = UIImage.init(data: data)
-                    image?.prepareForDisplay(completionHandler: { image in
-                        DispatchQueue.main.async {
-                            cell?.fadeIn(image)
-                        }
-                    })
-                }
-                
+        self.task = imageLoader.loadImage(from: model.imageUrl) { [weak cell] result in
+            if let image = try? result.get() {
+                cell?.fadeIn(image)
             }
             cell?.imageContainer.stopShimmering()
         }
@@ -43,7 +35,7 @@ final class FeedCellController {
     }
     
     func preload() {
-        task = imageLoader.loadImageData(from: model.imageUrl) { _ in }
+        self.task = self.imageLoader.loadImage(from: self.model.imageUrl) { _ in }
     }
     
     func cancelLoad() {

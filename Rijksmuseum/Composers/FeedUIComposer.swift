@@ -14,7 +14,7 @@ final class FeedUIComposer {
     
     public static func composeFeedViewController(
         feedLoader: FeedLoader,
-        imageLoader: ImageDataLoader) -> FeedViewController
+        imageLoader: ImageLoader) -> FeedViewController
     {
         let refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         let feedViewController = FeedViewController(refreshController: refreshController)
@@ -34,7 +34,7 @@ final class FeedUIComposer {
         return feedViewController
     }
     
-    private static func adaptFeedModelToCellControllers(dataSource: FeedDataSource, collectionView: UICollectionView, imageLoader: ImageDataLoader) -> ([FeedItem]) -> Void {
+    private static func adaptFeedModelToCellControllers(dataSource: FeedDataSource, collectionView: UICollectionView, imageLoader: ImageLoader) -> ([FeedItem]) -> Void {
         { [weak dataSource] feed in
             guard let dataSource else { return }
             let controllers = feed.map {
@@ -57,7 +57,10 @@ final class FeedUIComposer {
         let configuration = URLSessionConfiguration.default
         configuration.urlCache = URLCache(memoryCapacity: CacheSettings.memoryImageCacheSize, diskCapacity: CacheSettings.diskImageCacheSize)
         let urlSession = URLSession(configuration: configuration)
-        let imageLoader = RemoteImageDataLoaderMainThreadDispatcher(imageLoader: RemoteImageDataLoader(session: urlSession))
+        let remoteImageDataLoader = RemoteImageDataLoader(session: urlSession)
+        let imageCache = MemoryImageCache(resizeBlock: ImageResizer.decodeAndResize)
+        let cacheImageLoader = CacheImageLoader(cache: imageCache, fallbackLoader: remoteImageDataLoader)
+        let imageLoader = ImageLoaderMainThreadDispatcher(imageLoader: cacheImageLoader)
         
         let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
         return feedViewController
