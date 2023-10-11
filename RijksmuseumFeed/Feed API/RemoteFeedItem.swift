@@ -29,7 +29,7 @@ extension Array where Element == RemoteFeedItem {
 }
 
 extension RemoteFeedItem {
-    public func toModel() -> FeedItem {
+    func toModel() -> FeedItem {
         FeedItem(
             id: id,
             title: title,
