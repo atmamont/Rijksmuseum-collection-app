@@ -18,7 +18,9 @@ final class FeedUIComposer {
     {
         let refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         let feedViewController = FeedViewController(refreshController: refreshController)
-        let dataSource = FeedDataSource(collectionView: feedViewController.collectionView) { [weak feedViewController] collectionView, indexPath, itemIdentifier in
+        let dataSource = FeedDataSource(
+            collectionView: feedViewController.collectionView
+        ) { [weak feedViewController] collectionView, indexPath, itemIdentifier in
             feedViewController?.cellController(forRowAt: indexPath)?.view(for: indexPath)
         }
         refreshController.resetDataSource = { [weak dataSource] in
@@ -34,7 +36,11 @@ final class FeedUIComposer {
         return feedViewController
     }
     
-    private static func adaptFeedModelToCellControllers(dataSource: FeedDataSource, collectionView: UICollectionView, imageLoader: ImageLoader) -> ([FeedItem]) -> Void {
+    private static func adaptFeedModelToCellControllers(
+        dataSource: FeedDataSource,
+        collectionView: UICollectionView,
+        imageLoader: ImageLoader
+    ) -> ([FeedItem]) -> Void {
         { [weak dataSource] feed in
             guard let dataSource else { return }
             let controllers = feed.map {
@@ -55,15 +61,24 @@ final class FeedUIComposer {
     }
     
     static func makeFeedViewController() -> FeedViewController {
-        let httpClient = AuthorizedHttpClient(URLSessionHTTPClient(), authorizationKey: Settings.apiKey)
+        let httpClient = AuthorizedHttpClient(
+            URLSessionHTTPClient(),
+            authorizationKey: Settings.apiKey
+        )
         let feedLoader = FeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
         
         let configuration = URLSessionConfiguration.default
-        configuration.urlCache = URLCache(memoryCapacity: Settings.Cache.memoryImageCacheSize, diskCapacity: Settings.Cache.diskImageCacheSize)
+        configuration.urlCache = URLCache(
+            memoryCapacity: Settings.Cache.memoryImageCacheSize,
+            diskCapacity: Settings.Cache.diskImageCacheSize
+        )
         let urlSession = URLSession(configuration: configuration)
         let remoteImageDataLoader = RemoteImageDataLoader(session: urlSession)
-        let imageCache = MemoryImageCache(resizeBlock: ImageResizer.decodeAndResize)
-        let cacheImageLoader = CacheImageLoader(cache: imageCache, fallbackLoader: remoteImageDataLoader)
+        let imageCache = MemoryImageCache(resizeBlock: { image, _ in image})
+        let cacheImageLoader = CacheImageLoader(
+            cache: imageCache,
+            fallbackLoader: remoteImageDataLoader
+        )
         let imageLoader = ImageLoaderMainThreadDispatcher(imageLoader: cacheImageLoader)
         
         let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
