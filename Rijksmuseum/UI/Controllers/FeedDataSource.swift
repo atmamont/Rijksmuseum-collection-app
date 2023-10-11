@@ -17,8 +17,6 @@ struct Section: Hashable, Comparable {
 }
 
 final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCellController> {
-    
-    private var items = [FeedCellController]()
     private var sectionedItems = [Section: [FeedCellController]]()
     private var sections: [Section] {
         sectionedItems.keys.map { $0 }.sorted()
@@ -50,16 +48,7 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
     }
     
     func reset() {
-        items = []
         sectionedItems = [:]
         apply(.init())
-    }
-    
-    func sectionedItemsCount() -> Int {
-        var itemsCount = 0
-        sectionedItems.keys.forEach { key in
-            itemsCount += sectionedItems[key]?.count ?? 0
-        }
-        return itemsCount
     }
 }

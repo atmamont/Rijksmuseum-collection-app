@@ -69,7 +69,8 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }()
     
     private func loadMore() {
-        refreshController.load()
+        currentPage += 1
+        refreshController.load(page: currentPage)
     }
     
     private func isVeryLastItem(at indexPath: IndexPath) -> Bool {

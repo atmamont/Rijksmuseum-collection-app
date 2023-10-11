@@ -162,7 +162,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
     
     func assertThat(_ sut: FeedViewController, renders items: [FeedItem], inSection section: Int, file: StaticString = #file, line: UInt = #line) {
-        XCTAssertEqual(items.count, sut.numberOfRenderedFeedItems(in: section))
+        XCTAssertEqual(items.count, sut.numberOfRenderedFeedItems(in: section), file: file, line: line)
         
         items.enumerated().forEach { index, item in
             assertThat(sut, hasViewConfiguredForItem: item, at: IndexPath(item: index, section: section))
