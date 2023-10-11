@@ -20,9 +20,3 @@ public struct FeedItem: Equatable, Hashable {
         self.maker = maker
     }
 }
-
-public protocol FeedLoader {
-    typealias Result = Swift.Result<[FeedItem], Error>
-
-    func load(page: Int, completion: @escaping ((Result) -> Void))
-}

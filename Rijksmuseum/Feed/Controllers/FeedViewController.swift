@@ -11,12 +11,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private let refreshController: FeedRefreshViewController
     
     var dataSource: FeedDataSource?
-    var currentPage = 1
-    lazy var collectionView: UICollectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: compositionalLayout)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private var currentPage = 1
 
     init(refreshController: FeedRefreshViewController) {
         self.refreshController = refreshController
@@ -43,23 +38,6 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
 
         refreshController.load()
     }
-    
-    //MARK: - Layout
-    
-    private let compositionalLayout: UICollectionViewCompositionalLayout = {
-        let fraction: CGFloat = 1 / 2
-        let inset = 5.0
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fraction), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(fraction))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        return UICollectionViewCompositionalLayout(section: section)
-    }()
     
     private func loadMore() {
         currentPage += 1
@@ -97,4 +75,28 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private func cancelImageLoad(at indexPath: IndexPath) {
         cellController(forRowAt: indexPath)?.cancelLoad()
     }
+    
+    //MARK: - Layout
+    
+    private let compositionalLayout: UICollectionViewCompositionalLayout = {
+        let fraction: CGFloat = 1 / 2
+        let inset = 5.0
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fraction), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(fraction))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return UICollectionViewCompositionalLayout(section: section)
+    }()
+    
+    lazy var collectionView: UICollectionView = {
+        let view = UICollectionView(frame: .zero, collectionViewLayout: compositionalLayout)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
 }

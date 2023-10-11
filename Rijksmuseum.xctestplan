@@ -9,6 +9,15 @@
     }
   ],
   "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Rijksmuseum.xcodeproj",
+          "identifier" : "757CB07E2ACC2C4F00C8BB1A",
+          "name" : "Rijksmuseum"
+        }
+      ]
+    },
     "targetForVariableExpansion" : {
       "containerPath" : "container:Rijksmuseum.xcodeproj",
       "identifier" : "757CB07E2ACC2C4F00C8BB1A",
