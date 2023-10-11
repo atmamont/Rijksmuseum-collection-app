@@ -10,5 +10,5 @@ import Foundation
 public protocol FeedItemLoader {
     typealias Result = Swift.Result<FeedItem, Error>
 
-    func load(completion: @escaping ((Result) -> Void))
+    func load(objectNumber: String, completion: @escaping ((Result) -> Void))
 }

@@ -23,11 +23,17 @@ struct RemoteImage: Decodable {
 extension Array where Element == RemoteFeedItem {
     func toModels() -> [FeedItem] {
         map {
-            FeedItem(
-                id: $0.id,
-                title: $0.title,
-                imageUrl: $0.webImage.url,
-                maker: $0.principalOrFirstMaker)
+            $0.toModel()
         }
+    }
+}
+
+extension RemoteFeedItem {
+    public func toModel() -> FeedItem {
+        FeedItem(
+            id: id,
+            title: title,
+            imageUrl: webImage.url,
+            maker: principalOrFirstMaker)
     }
 }

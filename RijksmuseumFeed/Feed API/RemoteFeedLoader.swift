@@ -12,9 +12,6 @@ public class RemoteFeedLoader: FeedLoader {
     
     private let client: HTTPClient
     
-    private let requestPath = "/api/nl/collection"
-    private let baseUrl = URL(string: "https://www.rijksmuseum.nl")!
-
     public enum Error: Swift.Error {
         case invalidData
         case connectivity
@@ -25,7 +22,7 @@ public class RemoteFeedLoader: FeedLoader {
     }
     
     public func load(page: Int = 0, completion: @escaping (Result) -> Void) {
-        var requestUrl = baseUrl.appending(path: requestPath)
+        var requestUrl = API.baseUrl.appending(path: API.collectionRequestPath)
         requestUrl.append(queryItems: makeQueryItems(page: page))
         client.get(from: requestUrl) { result in
             switch result {

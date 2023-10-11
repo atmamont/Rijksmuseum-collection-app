@@ -1,18 +1,67 @@
 //
-//  RemoteFeedLoaderTests.swift
-//  RijksmuseumTests
+//  RemoteFeedItemLoaderTests.swift
+//  RijksmuseumFeedTests
 //
-//  Created by Andrei on 03/10/2023.
+//  Created by Andrei on 11/10/2023.
 //
 
 import XCTest
-import RijksmuseumFeed
 import Foundation
+import RijksmuseumFeed
 
-final class RemoteFeedLoaderTests: XCTestCase {
+final class RemoteFeedItemLoader: FeedItemLoader {
+    private let client: HTTPClient
+    
+    init(client: HTTPClient) {
+        self.client = client
+    }
+    
+    func load(objectNumber: String, completion: @escaping (FeedItemLoader.Result) -> Void) {
+        let requestUrl = API.baseUrl
+            .appending(path: API.collectionRequestPath)
+            .appending(path: objectNumber)
+        
+        client.get(from: requestUrl) { result in
+            switch result {
+            case let .success((remoteData, response)):
+                completion(RemoteFeedItemLoader.map(remoteData, from: response))
+            case .failure:
+                completion(.failure(RemoteFeedLoader.Error.connectivity))
+            }
+        }
+    }
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> FeedItemLoader.Result {
+        do {
+            let item = try RemoteFeedItemMapper.map(data, from: response)
+            return .success(item.toModel())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
 
-    private let expectedLoadRequestUrl = URL(string: "https://www.rijksmuseum.nl/api/nl/collection?imgonly=true&p=0&s=artist")
+internal final class RemoteFeedItemMapper {
+    private struct Root: Decodable {
+        let artObject: RemoteFeedItem
+    }
+    
+    private static var OK_200: Int { return 200 }
+    
+    static func map(_ data: Data, from response: HTTPURLResponse) throws -> RemoteFeedItem {
+        guard response.statusCode == OK_200,
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteFeedLoader.Error.invalidData
+        }
+        
+        return root.artObject
+    }
+}
 
+
+final class RemoteFeedItemLoaderTests: XCTestCase {
+    private let objectNumber = "any-object-number"
+    private lazy var expectedLoadRequestUrl = URL(string: "https://www.rijksmuseum.nl/api/nl/collection/\(objectNumber)")
+    
     func test_init_doesNotTriggerServiceRequest() {
         let (_, client) = makeSUT()
         
@@ -21,36 +70,26 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_load_performsRequest() {
         let (sut, client) = makeSUT()
-
-        sut.load { _ in }
+        
+        sut.load(objectNumber: objectNumber) { _ in }
         
         XCTAssertEqual(client.requestedUrls, [expectedLoadRequestUrl], "Expected to perform request on load call")
     }
-
+    
     func test_loadTwice_requestsDataFromURLTwice() {
         let (sut, client) = makeSUT()
-
-        sut.load { _ in }
-        sut.load { _ in }
-
+        
+        sut.load(objectNumber: objectNumber) { _ in }
+        sut.load(objectNumber: objectNumber) { _ in }
+        
         XCTAssertEqual(client.requestedUrls, [expectedLoadRequestUrl, expectedLoadRequestUrl])
     }
-
+    
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.connectivity)) {
             client.completeWithError(NSError(domain: "A random connectivity error", code: 1))
-        }
-    }
-
-    func test_load_deliversEmptyFeedWhenReceivingEpmtyResponseOnSuccess() {
-        let (sut, client) = makeSUT()
-        let expectedEmptyFeed = [FeedItem]()
-        
-        expect(sut, toCompleteWith: .success(expectedEmptyFeed)) {
-            let emptyData = makeItemsJSON([])
-            client.complete(withStatusCode: 200, data: emptyData)
         }
     }
     
@@ -61,7 +100,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         errorCodeResponses.enumerated().forEach { index, value in
             expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
-                let jsonData = makeItemsJSON([])
+                let item = makeItem(title: "De Nachtwacht",
+                                    longTitle: "De Nachtwacht, Rembrandt van Rijn, 1642",
+                                    principalOrFirstMaker: "Rembrandt van Rijn",
+                                    imageUrl: URL(string: "http://an-image-1.url")!)
+                let jsonData = makeItemJSON(item.json)
                 client.complete(withStatusCode: value, data: jsonData, at: index)
             })
         }
@@ -75,42 +118,37 @@ final class RemoteFeedLoaderTests: XCTestCase {
             client.complete(withStatusCode: 200, data: invalidJSON)
         })
     }
-
+    
     func test_load_deliversFeedOn200HTTPResponseWithValidJSON() {
         let (sut, client) = makeSUT()
-        let items = [
-            makeItem(title: "De Nachtwacht",
-                     longTitle: "De Nachtwacht, Rembrandt van Rijn, 1642",
-                     principalOrFirstMaker: "Rembrandt van Rijn",
-                     imageUrl: URL(string: "http://an-image-1.url")!),
-            makeItem(title: "Sunflowers", 
-                     longTitle: "Sunflowers, Vincent Van Gogh, 1889",
-                     principalOrFirstMaker: "Vincent Van Gogh",
-                     imageUrl: URL(string: "http://an-image-2.url")!)
-        ]
-        let models = items.map { $0.item }
-        let itemsJson = makeItemsJSON(items.map { $0.json})
+        let item = makeItem(title: "De Nachtwacht",
+                            longTitle: "De Nachtwacht, Rembrandt van Rijn, 1642",
+                            principalOrFirstMaker: "Rembrandt van Rijn",
+                            imageUrl: URL(string: "http://an-image-1.url")!)
         
-        expect(sut, toCompleteWith: .success(models), when: {
+        let model = item.item
+        let itemsJson = makeItemJSON(item.json)
+        
+        expect(sut, toCompleteWith: .success(model), when: {
             client.complete(withStatusCode: 200, data: itemsJson)
         })
     }
-
+    
     // MARK: - Helpers
     
-    private func makeSUT() -> (RemoteFeedLoader, HTTPClientSpy) {
+    private func makeSUT() -> (RemoteFeedItemLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(client: client)
+        let sut = RemoteFeedItemLoader(client: client)
         
         trackForMemoryLeaks(client)
         trackForMemoryLeaks(sut)
         
         return (sut, client)
-
+        
     }
     
-    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
-        let json = ["artObjects": items]
+    private func makeItemJSON(_ item: [String: Any]) -> Data {
+        let json = ["artObject": item]
         return try! JSONSerialization.data(withJSONObject: json)
     }
     
@@ -131,11 +169,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
         
         return (item, json)
     }
-
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    
+    private func expect(_ sut: RemoteFeedItemLoader, toCompleteWith expectedResult: RemoteFeedItemLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
         
-        sut.load { receivedResult in
+        sut.load(objectNumber: objectNumber) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
