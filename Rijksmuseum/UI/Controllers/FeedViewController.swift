@@ -72,9 +72,12 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         refreshController.load()
     }
     
+    private func isVeryLastItem(at indexPath: IndexPath) -> Bool {
+        (indexPath.section == collectionView.numberOfSections - 1) && (indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.section == collectionView.numberOfSections - 1,
-           indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+        if isVeryLastItem(at: indexPath) {
             loadMore()
         }
     }
