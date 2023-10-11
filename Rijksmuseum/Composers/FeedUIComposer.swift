@@ -16,19 +16,20 @@ final class FeedUIComposer {
         feedLoader: FeedLoader,
         imageLoader: ImageLoader) -> FeedViewController
     {
-        let refreshController = FeedRefreshViewController(feedLoader: feedLoader)
+        let viewModel = FeedViewModel(feedLoader: feedLoader)
+        let refreshController = FeedRefreshViewController(viewModel: viewModel)
         let feedViewController = FeedViewController(refreshController: refreshController)
         let dataSource = FeedDataSource(
             collectionView: feedViewController.collectionView
         ) { [weak feedViewController] collectionView, indexPath, itemIdentifier in
             feedViewController?.cellController(forRowAt: indexPath)?.view(for: indexPath)
         }
-        refreshController.resetDataSource = { [weak dataSource] in
+        viewModel.onFeedReset = { [weak dataSource] in
             dataSource?.reset()
         }
 
         feedViewController.dataSource = dataSource
-        refreshController.onFeedRefresh = adaptFeedModelToCellControllers(
+        viewModel.onFeedLoad = adaptFeedModelToCellControllers(
             dataSource: dataSource,
             collectionView: feedViewController.collectionView,
             imageLoader: imageLoader)

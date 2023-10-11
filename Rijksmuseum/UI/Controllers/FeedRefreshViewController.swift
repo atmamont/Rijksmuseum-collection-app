@@ -6,22 +6,14 @@
 //
 
 import UIKit
-import RijksmuseumFeed
 
 final class FeedRefreshViewController: UIViewController {
-    private(set) lazy var refreshControl = {
-        let control = UIRefreshControl()
-        control.addTarget(self, action: #selector(load), for: .valueChanged)
-        return control
-    }()
+    private(set) lazy var refreshControl = binded(UIRefreshControl())
     
-    private let feedLoader: FeedLoader
+    private let viewModel: FeedViewModel
     
-    var onFeedRefresh: (([FeedItem]) -> Void)?
-    var resetDataSource: (() -> Void)?
-    
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
+    init(viewModel: FeedViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,19 +27,18 @@ final class FeedRefreshViewController: UIViewController {
     }
     
     @objc func load(page: Int = 1) {
-        refreshControl.beginRefreshing()
-
-        feedLoader.load(page: page) { [weak self] result in
-            switch result {
-            case let .success(feed):
-                if page == 1 {
-                    self?.resetDataSource?()
-                }
-                self?.onFeedRefresh?(feed)
-            case let .failure(error):
-                print(error)
+        viewModel.loadFeed(page: page)
+    }
+    
+    private func binded(_ view: UIRefreshControl) -> UIRefreshControl {
+        viewModel.onChange = { [weak self] viewModel in
+            if viewModel.isLoading {
+                self?.refreshControl.beginRefreshing()
+            } else {
+                self?.refreshControl.endRefreshing()
             }
-            self?.refreshControl.endRefreshing()
         }
+        view.addTarget(self, action: #selector(load), for: .valueChanged)
+        return view
     }
 }
