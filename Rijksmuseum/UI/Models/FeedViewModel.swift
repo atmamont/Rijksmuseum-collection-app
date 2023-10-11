@@ -9,24 +9,19 @@ import Foundation
 import RijksmuseumFeed
 
 final class FeedViewModel {
+    typealias Observer<T> = (T) -> Void
     private let feedLoader: FeedLoader
     
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
     }
     
-    var onChange: ((FeedViewModel) -> Void)?
-    
+    var onLoadingStateChange: Observer<Bool>?
     var onFeedReset: (() -> Void)?
-    var onFeedLoad: (([FeedItem]) -> Void)?
+    var onFeedLoad: Observer<[FeedItem]>?
 
-    
-    private(set) var isLoading: Bool = false {
-        didSet { onChange?(self) }
-    }
-    
     func loadFeed(page: Int = 1) {
-        isLoading = true
+        onLoadingStateChange?(true)
         feedLoader.load(page: page) { [weak self] result in
             if let feed = try? result.get() {
                 if page == 1 {
@@ -34,7 +29,7 @@ final class FeedViewModel {
                 }
                 self?.onFeedLoad?(feed)
             }
-            self?.isLoading = false
+            self?.onLoadingStateChange?(false)
         }
     }
 }
