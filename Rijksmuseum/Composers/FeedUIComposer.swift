@@ -12,7 +12,30 @@ import UIKit
 final class FeedUIComposer {
     private init() {}
     
+    public static func composeFeedViewController(navigationController: UINavigationController) -> FeedViewController {
+        let httpClient = AuthorizedHttpClient(
+            URLSessionHTTPClient(),
+            authorizationKey: Settings.apiKey)
+        let feedLoader = FeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
+        let imageLoader = cachedImageLoader()
+        let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader, navigationController: navigationController)
+        return feedViewController
+    }
+
     public static func composeFeedViewController(
+        feedLoader: FeedLoader,
+        imageLoader: ImageLoader,
+        navigationController: UINavigationController? = nil) -> FeedViewController
+    {
+        let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
+        feedViewController.onFeedItemTap = { objectNumber in
+            let feedItemDetailsViewController = composeFeedItemDetailsViewController(objectNumber: objectNumber)
+            navigationController?.pushViewController(feedItemDetailsViewController, animated: true)
+        }
+        return feedViewController
+    }
+
+    private static func composeFeedViewController(
         feedLoader: FeedLoader,
         imageLoader: ImageLoader) -> FeedViewController
     {
@@ -52,6 +75,17 @@ final class FeedUIComposer {
         }
     }
     
+    private static func composeFeedItemDetailsViewController(objectNumber: String) -> FeedItemDetailsViewController {
+        let httpClient = AuthorizedHttpClient(
+            URLSessionHTTPClient(),
+            authorizationKey: Settings.apiKey)
+        let loader = FeedItemLoaderMainThreadDispatcher(RemoteFeedItemLoader(client: httpClient))
+        let imageLoader = cachedImageLoader()
+        let viewModel = FeedItemDetailsViewModel(objectNumber: objectNumber, loader: loader, imageLoader: imageLoader)
+        let viewController = FeedItemDetailsViewController(viewModel: viewModel)
+        return viewController
+    }
+
     private struct Settings {
         struct Cache {
             static let memoryImageCacheSize = 1024 * 1024 * 10
@@ -61,28 +95,23 @@ final class FeedUIComposer {
         static let apiKey = "0fiuZFh4"
     }
     
-    static func makeFeedViewController() -> FeedViewController {
-        let httpClient = AuthorizedHttpClient(
-            URLSessionHTTPClient(),
-            authorizationKey: Settings.apiKey
-        )
-        let feedLoader = FeedLoaderMainThreadDispatcher(RemoteFeedLoader(client: httpClient))
-        
+    private static func cachedURLSession() -> URLSession {
         let configuration = URLSessionConfiguration.default
         configuration.urlCache = URLCache(
             memoryCapacity: Settings.Cache.memoryImageCacheSize,
             diskCapacity: Settings.Cache.diskImageCacheSize
         )
-        let urlSession = URLSession(configuration: configuration)
-        let remoteImageDataLoader = RemoteImageDataLoader(session: urlSession)
+        
+        return URLSession(configuration: configuration)
+    }
+    
+    private static func cachedImageLoader() -> ImageLoader {
+        let remoteImageDataLoader = RemoteImageDataLoader(session: cachedURLSession())
         let imageCache = MemoryImageCache(resizeBlock: { image, _ in image})
         let cacheImageLoader = CacheImageLoader(
             cache: imageCache,
             fallbackLoader: remoteImageDataLoader
         )
-        let imageLoader = ImageLoaderMainThreadDispatcher(imageLoader: cacheImageLoader)
-        
-        let feedViewController = composeFeedViewController(feedLoader: feedLoader, imageLoader: imageLoader)
-        return feedViewController
+        return ImageLoaderMainThreadDispatcher(imageLoader: cacheImageLoader)
     }
 }

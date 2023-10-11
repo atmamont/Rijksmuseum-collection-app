@@ -9,11 +9,11 @@ import Foundation
 
 public struct RemoteFeedItem: Decodable {
     let id: String
+    let objectNumber: String
     let title: String
     let longTitle: String
     let principalOrFirstMaker: String
     let webImage: RemoteImage
-    let headerImage: RemoteImage
 }
 
 struct RemoteImage: Decodable {
@@ -22,17 +22,16 @@ struct RemoteImage: Decodable {
 
 extension Array where Element == RemoteFeedItem {
     func toModels() -> [FeedItem] {
-        map {
-            $0.toModel()
-        }
+        map { $0.toModel() }
     }
 }
 
 extension RemoteFeedItem {
     func toModel() -> FeedItem {
         FeedItem(
-            id: id,
+            id: objectNumber,
             title: title,
+            longTitle: longTitle,
             imageUrl: webImage.url,
             maker: principalOrFirstMaker)
     }

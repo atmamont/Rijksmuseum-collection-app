@@ -18,6 +18,9 @@
 		7552825F2AD6F0DC009A42C6 /* RemoteFeedItemLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E3D8C2AD6EBCA003AB108 /* RemoteFeedItemLoaderTests.swift */; };
 		755282612AD6F17A009A42C6 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755282602AD6F17A009A42C6 /* API.swift */; };
 		755282632AD6F84E009A42C6 /* RemoteFeedItemLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755282622AD6F84E009A42C6 /* RemoteFeedItemLoader.swift */; };
+		755282662AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755282652AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift */; };
+		755282682AD6FBB6009A42C6 /* FeedItemDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755282672AD6FBB6009A42C6 /* FeedItemDetailsView.swift */; };
+		7552826B2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7552826A2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift */; };
 		756BB8422ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; };
 		756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */; };
 		756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */; };
@@ -98,6 +101,9 @@
 		753641432AD001A100F3050A /* XCTestCase+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Helpers.swift"; sourceTree = "<group>"; };
 		755282602AD6F17A009A42C6 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		755282622AD6F84E009A42C6 /* RemoteFeedItemLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItemLoader.swift; sourceTree = "<group>"; };
+		755282652AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemDetailsViewController.swift; sourceTree = "<group>"; };
+		755282672AD6FBB6009A42C6 /* FeedItemDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemDetailsView.swift; sourceTree = "<group>"; };
+		7552826A2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemLoaderMainThreadDispatcher.swift; sourceTree = "<group>"; };
 		756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
 		756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RijksmuseumFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		756BB8362ACD596800807FF7 /* RijksmuseumFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RijksmuseumFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +180,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		755282642AD6FA6F009A42C6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				755282652AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		755282692AD6FBBB009A42C6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				755282672AD6FBB6009A42C6 /* FeedItemDetailsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		756BB8302ACD596800807FF7 /* RijksmuseumFeed */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +340,8 @@
 		759E3D822AD6E96D003AB108 /* FeedDetails */ = {
 			isa = PBXGroup;
 			children = (
+				755282692AD6FBBB009A42C6 /* Views */,
+				755282642AD6FA6F009A42C6 /* Controllers */,
 				759E3D832AD6E99D003AB108 /* Models */,
 			);
 			path = FeedDetails;
@@ -392,6 +416,7 @@
 			isa = PBXGroup;
 			children = (
 				75B7AF752AD1579700DEB136 /* FeedLoaderMainThreadDispatcher.swift */,
+				7552826A2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift */,
 			);
 			path = "Composition Layer";
 			sourceTree = "<group>";
@@ -577,6 +602,7 @@
 				756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */,
 				756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */,
 				759E3D872AD6EA33003AB108 /* FeedLoader.swift in Sources */,
+				7552826B2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift in Sources */,
 				759E3D892AD6EA40003AB108 /* FeedItemLoader.swift in Sources */,
 				751263912ACD60EF00E4BD70 /* FeedItem.swift in Sources */,
 			);
@@ -607,6 +633,7 @@
 				757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */,
 				75BB79AA2AD0580200727138 /* UIView+Shimmering.swift in Sources */,
 				75B7AF7B2AD1603500DEB136 /* ImageDataLoader.swift in Sources */,
+				755282662AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift in Sources */,
 				759E3D7F2AD6E32F003AB108 /* FeedItemViewModel.swift in Sources */,
 				75B7AF832AD1700D00DEB136 /* FeedCellController.swift in Sources */,
 				75B7AF812AD1614800DEB136 /* FeedRefreshViewController.swift in Sources */,
@@ -615,6 +642,7 @@
 				75E455092AD1482000CD3D32 /* FeedUIComposer.swift in Sources */,
 				75B7AF872AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift in Sources */,
 				75B7AF922AD3FADC00DEB136 /* CacheImageLoader.swift in Sources */,
+				755282682AD6FBB6009A42C6 /* FeedItemDetailsView.swift in Sources */,
 				759E3D852AD6E9A7003AB108 /* FeedItemDetailsModel.swift in Sources */,
 				75B7AF962AD4218700DEB136 /* ImageResizer.swift in Sources */,
 			);

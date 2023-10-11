@@ -15,8 +15,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: scene)
 
-        let feedViewController = FeedUIComposer.makeFeedViewController()
-        let rootViewController = UINavigationController(rootViewController: feedViewController)
+        let rootViewController = UINavigationController()
+        let feedViewController = FeedUIComposer.composeFeedViewController(navigationController: rootViewController)
+        rootViewController.setViewControllers([feedViewController], animated: true)
+        
 
         window.rootViewController = rootViewController
         window.makeKeyAndVisible()

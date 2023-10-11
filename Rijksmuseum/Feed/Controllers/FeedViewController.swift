@@ -11,11 +11,15 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private let refreshController: FeedRefreshViewController
     
     var dataSource: FeedDataSource?
+    var onFeedItemTap: ((_ objectNumber: String) -> Void)?
+    
     private var currentPage = 1
 
     init(refreshController: FeedRefreshViewController) {
         self.refreshController = refreshController
         super.init(nibName: nil, bundle: nil)
+        
+        title = NSLocalizedString("feed_screen_title", comment: "Feed screen - Title")
     }
     
     @available(*, unavailable)
@@ -76,6 +80,11 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         cellController(forRowAt: indexPath)?.cancelLoad()
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = dataSource?.itemIdentifier(for: indexPath) else { return }
+        onFeedItemTap?(item.viewModel.id)
+    }
+    
     //MARK: - Layout
     
     private let compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -98,5 +107,4 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
 }
