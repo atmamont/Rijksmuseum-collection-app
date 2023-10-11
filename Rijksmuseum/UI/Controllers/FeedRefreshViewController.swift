@@ -20,6 +20,8 @@ final class FeedRefreshViewController: UIViewController {
     var onFeedRefresh: (([FeedItem]) -> Void)?
     var resetDataSource: (() -> Void)?
     
+    private var currentPage = 0
+    
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
         super.init(nibName: nil, bundle: nil)
@@ -34,7 +36,12 @@ final class FeedRefreshViewController: UIViewController {
         self.view = refreshControl
     }
     
-    func load(page: Int = 1) {
+    func load() {
+        currentPage += 1
+        load(page: currentPage)
+    }
+    
+    private func load(page: Int) {
         refreshControl.beginRefreshing()
 
         feedLoader.load(page: page) { [weak self] result in
@@ -49,7 +56,8 @@ final class FeedRefreshViewController: UIViewController {
     }
     
     @objc private func pullToResfresh() {
+        currentPage = 0
         resetDataSource?()
-        load(page: 1)
+        load()
     }
 }

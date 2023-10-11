@@ -69,16 +69,12 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }()
     
     private func loadMore() {
-        currentPage += 1
-        refreshController.load(page: currentPage)
+        refreshController.load()
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cellController = cellController(forRowAt: indexPath), let dataSource else { return }
-        print("Checking for load more for item at \(indexPath)")
         if indexPath.section == collectionView.numberOfSections - 1,
            indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
-            collectionView.addSubview(refreshController.view)
             loadMore()
         }
     }

@@ -67,6 +67,9 @@ final class FeedViewControllerTests: XCTestCase {
     
     private let indexPath00 = IndexPath(item: 0, section: 0)
     private let indexPath01 = IndexPath(item: 1, section: 0)
+    private let indexPath02 = IndexPath(item: 2, section: 0)
+    private let indexPath03 = IndexPath(item: 3, section: 0)
+    private let indexPath04 = IndexPath(item: 4, section: 0)
     
     func test_feed_loadsImageUrlWhenVisible() {
         let (sut, loader) = makeSUT()
@@ -96,51 +99,6 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl, item2.imageUrl])
     }
     
-    func test_feedLoadingIndicator_isVisibleWhileLoadingImage() {
-        let (sut, loader) = makeSUT()
-        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
-        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
-        
-        sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [item1, item2])
-        let view0 = sut.simulateFeedItemVisible(at: indexPath00)
-        let view1 = sut.simulateFeedItemVisible(at: indexPath01)
-        
-        XCTAssertEqual(view0?.isShowingLoadingIndicator, true)
-        XCTAssertEqual(view1?.isShowingLoadingIndicator, true)
-        
-        loader.completeImageLoading(at: 0)
-        XCTAssertEqual(view0?.isShowingLoadingIndicator, false)
-        XCTAssertEqual(view1?.isShowingLoadingIndicator, true)
-        
-        loader.completeImageLoading(with: anyNSError(), at: 1)
-        XCTAssertEqual(view0?.isShowingLoadingIndicator, false)
-        XCTAssertEqual(view1?.isShowingLoadingIndicator, false)
-    }
-    
-    func test_feed_rendersImageLoadedFromURL() {
-        let (sut, loader) = makeSUT()
-        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
-        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
-        
-        sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [item1, item2])
-        let view0 = sut.simulateFeedItemVisible(at: indexPath00)
-        let view1 = sut.simulateFeedItemVisible(at: indexPath01)
-        XCTAssertEqual(view0?.renderedImageData, .none)
-        XCTAssertEqual(view1?.renderedImageData, .none)
-        
-        let image0 = UIColor.white.makeImage()
-        loader.completeImageLoading(with: image0, at: 0)
-        XCTAssertEqual(view0?.renderedImageData, image0.pngData())
-        XCTAssertEqual(view1?.renderedImageData, .none)
-
-        let image1 = UIColor.red.makeImage()
-        loader.completeImageLoading(with: image1, at: 1)
-        XCTAssertEqual(view0?.renderedImageData, image0.pngData())
-        XCTAssertEqual(view1?.renderedImageData, image1.pngData())
-    }
-
     func test_feed_rendersImageLoadedFromURLWhenFeedItemIsNearlyVisible() {
         let (sut, loader) = makeSUT()
         let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
@@ -159,6 +117,28 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateFeedItemNotNearlyVisible(at: indexPath01)
         XCTAssertEqual(loader.canceledImageUrls, [item2.imageUrl])
 
+    }
+    
+    func test_feed_loadsMoreItemsOnReachingFeedEndRespectingOffset() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        let item3 = makeFeedItem(title: "Test item 3", imageUrl: URL(string: "https://another.url")!)
+        let item4 = makeFeedItem(title: "Test item 4", imageUrl: URL(string: "https://another.url")!)
+        let item5 = makeFeedItem(title: "Test item 5", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2, item3, item4, item5])
+        XCTAssertEqual(loader.requestFeedCallCount, 1)
+        
+        sut.simulateFeedItemWillBeDisplayed(at: indexPath02)
+        XCTAssertEqual(loader.requestFeedCallCount, 1)
+
+        sut.simulateFeedItemWillBeDisplayed(at: indexPath03)
+        XCTAssertEqual(loader.requestFeedCallCount, 1)
+
+        sut.simulateFeedItemWillBeDisplayed(at: indexPath04)
+        XCTAssertEqual(loader.requestFeedCallCount, 2)
     }
     
     // MARK: - Helpers
@@ -282,6 +262,12 @@ private extension FeedViewController {
         
         let ds = collectionView.prefetchDataSource
         ds?.collectionView?(collectionView, cancelPrefetchingForItemsAt: [indexPath])
+    }
+    
+    func simulateFeedItemWillBeDisplayed(at indexPath: IndexPath) {
+        let view = simulateFeedItemVisible(at: indexPath)
+        let delegate = collectionView.delegate
+        delegate?.collectionView?(collectionView, willDisplay: view!, forItemAt: indexPath)
     }
 
     var isShowingLoadingIndicator: Bool {

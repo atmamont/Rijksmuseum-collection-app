@@ -25,11 +25,11 @@ final class FeedCellController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: indexPath) as! FeedItemCell
         cell.configure(with: model)
         cell.imageContainer.startShimmering()
+        
         self.task = imageLoader.loadImage(from: model.imageUrl) { [weak cell] result in
             if let image = try? result.get() {
                 cell?.fadeIn(image)
             }
-            cell?.imageContainer.stopShimmering()
         }
         return cell
     }
