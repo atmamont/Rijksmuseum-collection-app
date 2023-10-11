@@ -15,7 +15,6 @@
 		753641422ACFFC2900F3050A /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753641412ACFFC2900F3050A /* FeedViewControllerTests.swift */; };
 		753641442AD001A100F3050A /* XCTestCase+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753641432AD001A100F3050A /* XCTestCase+Helpers.swift */; };
 		753641452AD001AD00F3050A /* XCTestCase+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753641432AD001A100F3050A /* XCTestCase+Helpers.swift */; };
-		756BB8372ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; };
 		756BB8422ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */; };
 		756BB84B2ACD5B2200807FF7 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */; };
 		756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */; };
@@ -51,13 +50,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7512638E2ACD5F3200E4BD70 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 757CB0772ACC2C4F00C8BB1A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 757CB07E2ACC2C4F00C8BB1A;
-			remoteInfo = Rijksmuseum;
-		};
 		756BB8382ACD596800807FF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 757CB0772ACC2C4F00C8BB1A /* Project object */;
@@ -155,7 +147,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				756BB8372ACD596800807FF7 /* RijksmuseumFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +430,6 @@
 			);
 			dependencies = (
 				756BB8392ACD596800807FF7 /* PBXTargetDependency */,
-				7512638F2ACD5F3200E4BD70 /* PBXTargetDependency */,
 			);
 			name = RijksmuseumFeedTests;
 			productName = RijskmuseumFeedTests;
@@ -631,11 +621,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7512638F2ACD5F3200E4BD70 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 757CB07E2ACC2C4F00C8BB1A /* Rijksmuseum */;
-			targetProxy = 7512638E2ACD5F3200E4BD70 /* PBXContainerItemProxy */;
-		};
 		756BB8392ACD596800807FF7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 756BB82E2ACD596800807FF7 /* RijksmuseumFeed */;
