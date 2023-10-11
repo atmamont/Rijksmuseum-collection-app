@@ -19,7 +19,6 @@ struct Section: Hashable, Comparable {
 final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCellController> {
     
     private var items = [FeedCellController]()
-    
     private var sectionedItems = [Section: [FeedCellController]]()
     private var sections: [Section] {
         sectionedItems.keys.map { $0 }.sorted()
@@ -27,13 +26,18 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
     
     func append(_ newItems: [FeedCellController]) {
         // TODO: Optimization - apply changes to existing snapshot instead of creating a new one
-        self.items.append(contentsOf: newItems)
         
-        self.sectionedItems = items.reduce(into: [:]) { result, item in
+        let newSectionedItems = newItems.reduce(into: [Section:[FeedCellController]]()) { result, item in
             let section = Section(maker: item.model.maker)
-            var items = result[section] ?? [FeedCellController]()
+            var items: [FeedCellController] = result[section] ?? [FeedCellController]()
             items.append(item)
             result[section] = items
+        }
+        
+        sectionedItems.merge(newSectionedItems) { current, new in
+            var result = current
+            result.append(contentsOf: new)
+            return result
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, FeedCellController>()
@@ -47,5 +51,15 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
     
     func reset() {
         items = []
+        sectionedItems = [:]
+        apply(.init())
+    }
+    
+    func sectionedItemsCount() -> Int {
+        var itemsCount = 0
+        sectionedItems.keys.forEach { key in
+            itemsCount += sectionedItems[key]?.count ?? 0
+        }
+        return itemsCount
     }
 }
