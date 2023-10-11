@@ -22,7 +22,7 @@ public class RemoteFeedLoader: FeedLoader {
     }
     
     public func load(page: Int = 0, completion: @escaping (Result) -> Void) {
-        var requestUrl = API.baseUrl.appending(path: API.collectionRequestPath)
+        var requestUrl = APISettings.baseUrl.appending(path: APISettings.collectionRequestPath)
         requestUrl.append(queryItems: makeQueryItems(page: page))
         client.get(from: requestUrl) { result in
             switch result {

@@ -15,8 +15,8 @@ public final class RemoteFeedItemLoader: FeedItemLoader {
     }
     
     public func load(objectNumber: String, completion: @escaping (FeedItemLoader.Result) -> Void) {
-        let requestUrl = API.baseUrl
-            .appending(path: API.collectionRequestPath)
+        let requestUrl = APISettings.baseUrl
+            .appending(path: APISettings.collectionRequestPath)
             .appending(path: objectNumber)
         
         client.get(from: requestUrl) { result in

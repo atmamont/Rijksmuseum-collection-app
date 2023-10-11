@@ -12,7 +12,6 @@ public final class AuthorizedHttpClient: HTTPClient {
     private let key: String
     
     private lazy var parameters: [String: String] = {
-//        ["key": "0fiuZFh4"]
         ["key": self.key]
     }()
     

@@ -33,10 +33,6 @@ final class FeedItemCell: UICollectionViewCell {
         imageContainer.startShimmering()
     }
     
-    func configure(with model: FeedItem) {
-        titleLabel.text = model.title
-    }
-    
     func fadeIn(_ image: UIImage?) {
         let size = imageView.bounds.size
         let animateImageUpdate: (UIImage?) -> Void = { image in
