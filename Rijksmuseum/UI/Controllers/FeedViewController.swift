@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RijksmuseumFeed
 
 class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
     private let refreshController: FeedRefreshViewController

@@ -5,7 +5,6 @@
 //  Created by Andrei on 07/10/2023.
 //
 
-import RijksmuseumFeed
 import UIKit
 
 final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCellController> {

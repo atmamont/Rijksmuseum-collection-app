@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RijksmuseumFeed
 
 final class FeedCellController {
     private let collectionView: UICollectionView
