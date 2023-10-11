@@ -8,12 +8,6 @@
 import UIKit
 import RijksmuseumFeed
 
-
-struct FeedItemViewModel {
-    let title: String
-    let imageName: String
-}
-
 class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
     private let refreshController: FeedRefreshViewController
     

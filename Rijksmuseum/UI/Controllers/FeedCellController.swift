@@ -10,45 +10,55 @@ import RijksmuseumFeed
 
 final class FeedCellController {
     private let collectionView: UICollectionView
-    private(set) var model: FeedItem
-    private let imageLoader: ImageLoader
-    private var task: ImageLoaderTask?
+    private(set) var viewModel: FeedItemViewModel
     
-    init(collectionView: UICollectionView, model: FeedItem, imageLoader: ImageLoader) {
-        self.model = model
-        self.imageLoader = imageLoader
+    init(collectionView: UICollectionView, viewModel: FeedItemViewModel) {
+        self.viewModel = viewModel
         self.collectionView = collectionView
     }
 
     func view(for indexPath: IndexPath) -> UICollectionViewCell {
-        let id = String(describing: FeedItemCell.self)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: indexPath) as! FeedItemCell
-        cell.configure(with: model)
-        cell.imageContainer.startShimmering()
-        
-        self.task = imageLoader.loadImage(from: model.imageUrl) { [weak cell] result in
-            if let image = try? result.get() {
-                cell?.fadeIn(image)
-            }
-        }
+        let cell = binded(collectionView.dequeueReusableCell(
+            withReuseIdentifier: String(describing: FeedItemCell.self),
+            for: indexPath
+        ) as! FeedItemCell)
+        viewModel.loadImage()
         return cell
     }
     
     func preload() {
-        self.task = self.imageLoader.loadImage(from: self.model.imageUrl) { _ in }
+        viewModel.loadImage()
     }
     
     func cancelLoad() {
-        task?.cancel()
+        viewModel.cancelImageLoad()
+    }
+    
+    private func binded(_ cell: FeedItemCell) -> FeedItemCell {
+        cell.titleLabel.text = viewModel.title
+        
+        viewModel.onImageLoad = { [weak cell] image in
+            cell?.fadeIn(image)
+        }
+        
+        viewModel.onImageLoadStateChange = { [weak cell] isLoading in
+            if isLoading {
+                cell?.imageContainer.startShimmering()
+            } else {
+                cell?.imageContainer.stopShimmering()
+            }
+        }
+        
+        return cell
     }
 }
 
 extension FeedCellController: Hashable {
     func hash(into hasher: inout Hasher) {
-        hasher.combine(model.id)
+        hasher.combine(viewModel.id)
     }
     
     static func == (lhs: FeedCellController, rhs: FeedCellController) -> Bool {
-        lhs.model.id == rhs.model.id
+        lhs.viewModel.id == rhs.viewModel.id
     }
 }

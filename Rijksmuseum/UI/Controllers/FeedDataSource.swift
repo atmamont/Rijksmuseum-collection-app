@@ -8,14 +8,6 @@
 import RijksmuseumFeed
 import UIKit
 
-struct Section: Hashable, Comparable {
-    static func < (lhs: Section, rhs: Section) -> Bool {
-        lhs.maker < rhs.maker
-    }
-    
-    let maker: String
-}
-
 final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCellController> {
     private var sectionedItems = [Section: [FeedCellController]]()
     private var sections: [Section] {
@@ -25,8 +17,8 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
     func append(_ newItems: [FeedCellController]) {
         // TODO: Optimization - apply changes to existing snapshot instead of creating a new one
         
-        let newSectionedItems = newItems.reduce(into: [Section:[FeedCellController]]()) { result, item in
-            let section = Section(maker: item.model.maker)
+        let newSectionedItems = newItems.reduce(into: [Section: [FeedCellController]]()) { result, item in
+            let section = Section(maker: item.viewModel.maker)
             var items: [FeedCellController] = result[section] ?? [FeedCellController]()
             items.append(item)
             result[section] = items
@@ -51,4 +43,12 @@ final class FeedDataSource: UICollectionViewDiffableDataSource<Section, FeedCell
         sectionedItems = [:]
         apply(.init())
     }
+}
+
+struct Section: Hashable, Comparable {
+    static func < (lhs: Section, rhs: Section) -> Bool {
+        lhs.maker < rhs.maker
+    }
+    
+    let maker: String
 }

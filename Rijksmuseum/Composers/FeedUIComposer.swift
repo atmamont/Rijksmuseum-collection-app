@@ -46,7 +46,7 @@ final class FeedUIComposer {
             guard let dataSource else { return }
             let controllers = feed.map {
                 FeedCellController(collectionView: collectionView,
-                                   model: $0, imageLoader: imageLoader)
+                                   viewModel: FeedItemViewModel(model: $0, imageLoader: imageLoader))
             }
             dataSource.append(controllers)
         }
