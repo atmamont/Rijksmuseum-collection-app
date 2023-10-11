@@ -36,17 +36,24 @@ final class FeedItemCell: UICollectionViewCell {
     func configure(with model: FeedItem) {
         titleLabel.text = model.title
     }
-
+    
     func fadeIn(_ image: UIImage?) {
-        UIView.animate(
-            withDuration: 0.1,
-            animations: {
-                self.imageView.alpha = 1
-                self.imageView.image = image
-            },
-            completion: { _ in
-                self.imageContainer.stopShimmering()
-            })
+        let size = imageView.bounds.size
+        let animateImageUpdate: (UIImage?) -> Void = { image in
+            UIView.animate(
+                withDuration: 0.1,
+                animations: {
+                    self.imageContainer.stopShimmering()
+                    self.imageView.alpha = 1
+                    self.imageView.image = image
+                })
+        }
+
+        image?.prepareThumbnail(of: size) { resizedImage in
+            DispatchQueue.main.async {
+                animateImageUpdate(resizedImage)
+            }
+        }
     }
     
     // MARK: - Layout
@@ -55,7 +62,7 @@ final class FeedItemCell: UICollectionViewCell {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .systemGray
-        view.font = .systemFont(ofSize: 12)
+        view.font = .systemFont(ofSize: 16)
         view.lineBreakMode = .byWordWrapping
         view.numberOfLines = 3
         view.textAlignment = .center
