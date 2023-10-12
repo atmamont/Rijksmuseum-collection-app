@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
+public final class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
     private let refreshController: FeedRefreshViewController
     
     var dataSource: FeedDataSource?
@@ -27,7 +27,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         collectionView.collectionViewLayout = compositionalLayout
@@ -52,17 +52,17 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         (indexPath.section == collectionView.numberOfSections - 1) && (indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1)
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if isVeryLastItem(at: indexPath) {
             loadMore()
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cancelImageLoad(at: indexPath)
     }
     
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
             cellController(forRowAt: indexPath)?.preload()
         }
@@ -72,7 +72,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         dataSource?.itemIdentifier(for: indexPath)
     }
     
-    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach(cancelImageLoad)
     }
     
@@ -80,7 +80,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         cellController(forRowAt: indexPath)?.cancelLoad()
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource?.itemIdentifier(for: indexPath) else { return }
         onFeedItemTap?(item.viewModel.id)
     }

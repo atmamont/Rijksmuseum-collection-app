@@ -7,11 +7,11 @@
 
 import UIKit
 
-protocol ImageLoaderTask {
+public protocol ImageLoaderTask {
     func cancel()
 }
 
-protocol ImageLoader {
+public protocol ImageLoader {
     typealias Result = Swift.Result<UIImage, Error>
     
     func loadImage(from url: URL, completion: @escaping (ImageLoader.Result) -> Void) -> ImageLoaderTask

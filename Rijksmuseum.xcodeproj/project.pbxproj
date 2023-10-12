@@ -26,6 +26,7 @@
 		756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */; };
 		756BB84D2ACD5B4C00807FF7 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0C02ACC350800C8BB1A /* URLSessionHTTPClientTests.swift */; };
 		756BB84E2ACD5B5100807FF7 /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */; };
+		7573AC682AD7D04100695E24 /* Rijksmuseum.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 7573AC672AD7CFE300695E24 /* Rijksmuseum.entitlements */; };
 		757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */; };
 		757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */; };
 		757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */; };
@@ -56,6 +57,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7552826C2AD7CDEF009A42C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 757CB0772ACC2C4F00C8BB1A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 757CB07E2ACC2C4F00C8BB1A;
+			remoteInfo = Rijksmuseum;
+		};
 		756BB8382ACD596800807FF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 757CB0772ACC2C4F00C8BB1A /* Project object */;
@@ -69,13 +77,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 756BB82E2ACD596800807FF7;
 			remoteInfo = RijskmuseumFeed;
-		};
-		757CB0962ACC2C5000C8BB1A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 757CB0772ACC2C4F00C8BB1A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 757CB07E2ACC2C4F00C8BB1A;
-			remoteInfo = Rijksmuseum;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -104,10 +105,12 @@
 		755282652AD6FA7A009A42C6 /* FeedItemDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemDetailsViewController.swift; sourceTree = "<group>"; };
 		755282672AD6FBB6009A42C6 /* FeedItemDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemDetailsView.swift; sourceTree = "<group>"; };
 		7552826A2AD71792009A42C6 /* FeedItemLoaderMainThreadDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemLoaderMainThreadDispatcher.swift; sourceTree = "<group>"; };
+		7552826E2AD7CEF8009A42C6 /* Rijksmuseum.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Rijksmuseum.xctestplan; sourceTree = "<group>"; };
 		756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
 		756BB82F2ACD596800807FF7 /* RijksmuseumFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RijksmuseumFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		756BB8362ACD596800807FF7 /* RijksmuseumFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RijksmuseumFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		756BB84F2ACD5BBB00807FF7 /* RijskmuseumFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RijskmuseumFeed.xctestplan; sourceTree = "<group>"; };
+		7573AC672AD7CFE300695E24 /* Rijksmuseum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rijksmuseum.entitlements; sourceTree = "<group>"; };
 		757CB07F2ACC2C4F00C8BB1A /* Rijksmuseum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rijksmuseum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -118,7 +121,6 @@
 		757CB0A32ACC2C5000C8BB1A /* RijksmuseumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RijksmuseumUITests.swift; sourceTree = "<group>"; };
 		757CB0A52ACC2C5000C8BB1A /* RijksmuseumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RijksmuseumUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		757CB0B52ACC2DEA00C8BB1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		757CB0B72ACC2EB200C8BB1A /* Rijksmuseum.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Rijksmuseum.xctestplan; sourceTree = "<group>"; };
 		757CB0B82ACC31B300C8BB1A /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		757CB0BB2ACC335900C8BB1A /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
@@ -219,7 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				759E3D802AD6E8A8003AB108 /* README.MD */,
-				757CB0B72ACC2EB200C8BB1A /* Rijksmuseum.xctestplan */,
+				7552826E2AD7CEF8009A42C6 /* Rijksmuseum.xctestplan */,
 				756BB84F2ACD5BBB00807FF7 /* RijskmuseumFeed.xctestplan */,
 				757CB0812ACC2C4F00C8BB1A /* Rijksmuseum */,
 				757CB0982ACC2C5000C8BB1A /* RijksmuseumTests */,
@@ -286,6 +288,7 @@
 		757CB0B32ACC2D6C00C8BB1A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7573AC672AD7CFE300695E24 /* Rijksmuseum.entitlements */,
 				757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */,
 				757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */,
 			);
@@ -500,7 +503,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				757CB0972ACC2C5000C8BB1A /* PBXTargetDependency */,
+				7552826D2AD7CDEF009A42C6 /* PBXTargetDependency */,
 			);
 			name = RijksmuseumTests;
 			productName = RijksmuseumTests;
@@ -573,6 +576,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7573AC682AD7D04100695E24 /* Rijksmuseum.entitlements in Resources */,
 				759E3D812AD6E8A8003AB108 /* README.MD in Resources */,
 				757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */,
 				757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */,
@@ -661,6 +665,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		7552826D2AD7CDEF009A42C6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 757CB07E2ACC2C4F00C8BB1A /* Rijksmuseum */;
+			targetProxy = 7552826C2AD7CDEF009A42C6 /* PBXContainerItemProxy */;
+		};
 		756BB8392ACD596800807FF7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 756BB82E2ACD596800807FF7 /* RijksmuseumFeed */;
@@ -670,11 +679,6 @@
 			isa = PBXTargetDependency;
 			target = 756BB82E2ACD596800807FF7 /* RijksmuseumFeed */;
 			targetProxy = 756BB8402ACD596800807FF7 /* PBXContainerItemProxy */;
-		};
-		757CB0972ACC2C5000C8BB1A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 757CB07E2ACC2C4F00C8BB1A /* Rijksmuseum */;
-			targetProxy = 757CB0962ACC2C5000C8BB1A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -944,11 +948,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Rijksmuseum/Resources/Rijksmuseum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4TDY757HQH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Rijksmuseum/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Rijksmuseum;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -961,6 +967,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andrii-mamchenko.rijksmuseum-assignment.Rijksmuseum";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -973,11 +982,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Rijksmuseum/Resources/Rijksmuseum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4TDY757HQH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Rijksmuseum/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Rijksmuseum;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -990,6 +1001,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andrii-mamchenko.rijksmuseum-assignment.Rijksmuseum";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1011,8 +1025,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andrii-mamchenko.rijksmuseum-assignment.RijksmuseumTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1036,8 +1051,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andrii-mamchenko.rijksmuseum-assignment.RijksmuseumTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

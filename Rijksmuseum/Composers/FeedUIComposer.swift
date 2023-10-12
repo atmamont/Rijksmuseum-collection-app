@@ -9,7 +9,7 @@ import Foundation
 import RijksmuseumFeed
 import UIKit
 
-final class FeedUIComposer {
+public final class FeedUIComposer {
     private init() {}
     
     public static func composeFeedViewController(navigationController: UINavigationController) -> FeedViewController {

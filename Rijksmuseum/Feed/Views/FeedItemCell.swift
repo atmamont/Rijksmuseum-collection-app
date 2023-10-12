@@ -8,7 +8,7 @@
 import UIKit
 import RijksmuseumFeed
 
-final class FeedItemCell: UICollectionViewCell {
+public final class FeedItemCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -25,7 +25,7 @@ final class FeedItemCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
         imageView.alpha = 0
