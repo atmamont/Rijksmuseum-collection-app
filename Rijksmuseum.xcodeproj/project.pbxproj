@@ -26,7 +26,7 @@
 		756BB84C2ACD5B2600807FF7 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0BD2ACC33A000C8BB1A /* URLSessionHTTPClient.swift */; };
 		756BB84D2ACD5B4C00807FF7 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0C02ACC350800C8BB1A /* URLSessionHTTPClientTests.swift */; };
 		756BB84E2ACD5B5100807FF7 /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756BB8282ACC978C00807FF7 /* RemoteFeedLoaderTests.swift */; };
-		7573AC682AD7D04100695E24 /* Rijksmuseum.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 7573AC672AD7CFE300695E24 /* Rijksmuseum.entitlements */; };
+		7573AC6A2AD7DAEE00695E24 /* FeedSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573AC692AD7DAEE00695E24 /* FeedSectionHeader.swift */; };
 		757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */; };
 		757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */; };
 		757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */; };
@@ -111,6 +111,7 @@
 		756BB8362ACD596800807FF7 /* RijksmuseumFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RijksmuseumFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		756BB84F2ACD5BBB00807FF7 /* RijskmuseumFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RijskmuseumFeed.xctestplan; sourceTree = "<group>"; };
 		7573AC672AD7CFE300695E24 /* Rijksmuseum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rijksmuseum.entitlements; sourceTree = "<group>"; };
+		7573AC692AD7DAEE00695E24 /* FeedSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSectionHeader.swift; sourceTree = "<group>"; };
 		757CB07F2ACC2C4F00C8BB1A /* Rijksmuseum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rijksmuseum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -384,6 +385,7 @@
 			isa = PBXGroup;
 			children = (
 				7536413F2ACFEC7D00F3050A /* FeedItemCell.swift */,
+				7573AC692AD7DAEE00695E24 /* FeedSectionHeader.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -518,7 +520,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					756BB82E2ACD596800807FF7 = {
 						CreatedOnToolsVersion = 15.0;
@@ -576,7 +578,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7573AC682AD7D04100695E24 /* Rijksmuseum.entitlements in Resources */,
 				759E3D812AD6E8A8003AB108 /* README.MD in Resources */,
 				757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */,
 				757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */,
@@ -646,6 +647,7 @@
 				75E455092AD1482000CD3D32 /* FeedUIComposer.swift in Sources */,
 				75B7AF872AD17EAC00DEB136 /* ImageLoaderMainThreadDispatcher.swift in Sources */,
 				75B7AF922AD3FADC00DEB136 /* CacheImageLoader.swift in Sources */,
+				7573AC6A2AD7DAEE00695E24 /* FeedSectionHeader.swift in Sources */,
 				755282682AD6FBB6009A42C6 /* FeedItemDetailsView.swift in Sources */,
 				759E3D852AD6E9A7003AB108 /* FeedItemDetailsModel.swift in Sources */,
 				75B7AF962AD4218700DEB136 /* ImageResizer.swift in Sources */,
@@ -698,6 +700,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -740,6 +743,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

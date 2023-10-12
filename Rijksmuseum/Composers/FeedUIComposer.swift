@@ -44,8 +44,11 @@ public final class FeedUIComposer {
         let feedViewController = FeedViewController(refreshController: refreshController)
         let dataSource = FeedDataSource(
             collectionView: feedViewController.collectionView
-        ) { [weak feedViewController] collectionView, indexPath, itemIdentifier in
-            feedViewController?.cellController(forRowAt: indexPath)?.view(for: indexPath)
+        ) { collectionView, indexPath, itemIdentifier in
+            itemIdentifier.view(for: indexPath)
+        }
+        dataSource.supplementaryViewProvider = { [weak feedViewController] collectionView, elementKind, indexPath in
+            feedViewController?.sectionHeader(for: indexPath)
         }
         viewModel.onFeedReset = { [weak dataSource] in
             dataSource?.reset()

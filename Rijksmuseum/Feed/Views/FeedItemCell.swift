@@ -35,21 +35,14 @@ public final class FeedItemCell: UICollectionViewCell {
     
     func fadeIn(_ image: UIImage?) {
         let size = imageView.bounds.size
-        let animateImageUpdate: (UIImage?) -> Void = { image in
-            UIView.animate(
-                withDuration: 0.1,
-                animations: {
-                    self.imageContainer.stopShimmering()
-                    self.imageView.alpha = 1
-                    self.imageView.image = image
-                })
-        }
-
-        image?.prepareThumbnail(of: size) { resizedImage in
-            DispatchQueue.main.async {
-                animateImageUpdate(resizedImage)
-            }
-        }
+        
+        UIView.animate(
+            withDuration: 0.1,
+            animations: {
+                self.imageContainer.stopShimmering()
+                self.imageView.image = image?.preparingThumbnail(of: size)
+                self.imageView.alpha = 1
+            })
     }
     
     // MARK: - Layout

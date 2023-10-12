@@ -32,6 +32,7 @@ public final class FeedViewController: UIViewController, UICollectionViewDelegat
 
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
+        collectionView.register(FeedSectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "FeedSectionHeader")
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
         collectionView.dataSource = dataSource
@@ -85,6 +86,17 @@ public final class FeedViewController: UIViewController, UICollectionViewDelegat
         onFeedItemTap?(item.viewModel.id)
     }
     
+    func sectionHeader(for indexPath: IndexPath) -> UICollectionReusableView {
+        let section = dataSource?.sectionIdentifier(for: indexPath.section)
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "FeedSectionHeader",
+            for: indexPath
+        ) as! FeedSectionHeader
+        header.titleLabel.text = section?.maker
+        return header
+    }
+    
     //MARK: - Layout
     
     private let compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -99,6 +111,13 @@ public final class FeedViewController: UIViewController, UICollectionViewDelegat
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(50.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: headerSize,
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top)
+        section.boundarySupplementaryItems = [header]
         return UICollectionViewCompositionalLayout(section: section)
     }()
     

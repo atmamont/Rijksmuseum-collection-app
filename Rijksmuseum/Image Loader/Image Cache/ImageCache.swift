@@ -19,7 +19,6 @@ final class MemoryImageCache: ImageCaching {
         cache.totalCostLimit = config.memoryLimit
         return cache
     }()
-    private let lock = NSLock()
     private let config: Config
     private var resizeBlock: ((_ image: UIImage, _ size: CGSize) -> UIImage)
 

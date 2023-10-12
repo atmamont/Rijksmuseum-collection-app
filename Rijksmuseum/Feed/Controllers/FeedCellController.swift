@@ -21,7 +21,7 @@ final class FeedCellController {
             withReuseIdentifier: String(describing: FeedItemCell.self),
             for: indexPath
         ) as! FeedItemCell)
-        viewModel.loadImage()
+        preload()
         return cell
     }
     
