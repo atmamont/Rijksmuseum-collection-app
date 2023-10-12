@@ -59,6 +59,10 @@ public final class FeedUIComposer {
             dataSource: dataSource,
             collectionView: feedViewController.collectionView,
             imageLoader: imageLoader)
+        viewModel.onFeedLoadError = { [weak feedViewController] error in
+            guard let feedViewController else { return }
+            AlertHelper.showAlert(title: RStrings.networkErrorAlertTitle, message: error.localizedDescription, from: feedViewController)
+        }
 
         return feedViewController
     }
