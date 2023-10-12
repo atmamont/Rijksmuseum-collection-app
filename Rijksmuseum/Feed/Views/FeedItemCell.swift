@@ -50,17 +50,17 @@ public final class FeedItemCell: UICollectionViewCell {
     private(set) lazy var titleLabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.textColor = .systemGray
+        view.textColor = .darkText
         view.font = .systemFont(ofSize: 16)
         view.lineBreakMode = .byWordWrapping
-        view.numberOfLines = 3
+        view.numberOfLines = 2
         view.textAlignment = .center
         return view
     }()
     private(set) lazy var titleContainer = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
+        view.backgroundColor = .lightGray
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
         view.addSubview(titleLabel, constraints: [
