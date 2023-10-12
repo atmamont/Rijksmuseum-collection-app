@@ -29,6 +29,7 @@
 		7573AC6A2AD7DAEE00695E24 /* FeedSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573AC692AD7DAEE00695E24 /* FeedSectionHeader.swift */; };
 		7573AC6C2AD7EACC00695E24 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573AC6B2AD7EACC00695E24 /* AlertHelper.swift */; };
 		7573AC6E2AD7EAFB00695E24 /* RStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573AC6D2AD7EAFB00695E24 /* RStrings.swift */; };
+		7573AC732AD7EE0600695E24 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 7573AC722AD7EE0600695E24 /* Localizable.xcstrings */; };
 		757CB0852ACC2C4F00C8BB1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */; };
 		757CB0872ACC2C4F00C8BB1A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */; };
 		757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */; };
@@ -116,6 +117,7 @@
 		7573AC692AD7DAEE00695E24 /* FeedSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSectionHeader.swift; sourceTree = "<group>"; };
 		7573AC6B2AD7EACC00695E24 /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
 		7573AC6D2AD7EAFB00695E24 /* RStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RStrings.swift; sourceTree = "<group>"; };
+		7573AC722AD7EE0600695E24 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		757CB07F2ACC2C4F00C8BB1A /* Rijksmuseum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rijksmuseum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		757CB0842ACC2C4F00C8BB1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		757CB0862ACC2C4F00C8BB1A /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				757CB08B2ACC2C5000C8BB1A /* Assets.xcassets */,
 				757CB08D2ACC2C5000C8BB1A /* LaunchScreen.storyboard */,
 				7573AC6D2AD7EAFB00695E24 /* RStrings.swift */,
+				7573AC722AD7EE0600695E24 /* Localizable.xcstrings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -551,6 +554,7 @@
 			knownRegions = (
 				en,
 				Base,
+				uk,
 			);
 			mainGroup = 757CB0762ACC2C4F00C8BB1A;
 			productRefGroup = 757CB0802ACC2C4F00C8BB1A /* Products */;
@@ -586,6 +590,7 @@
 			files = (
 				759E3D812AD6E8A8003AB108 /* README.MD in Resources */,
 				757CB08F2ACC2C5000C8BB1A /* LaunchScreen.storyboard in Resources */,
+				7573AC732AD7EE0600695E24 /* Localizable.xcstrings in Resources */,
 				757CB08C2ACC2C5000C8BB1A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -844,6 +849,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -904,6 +910,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
