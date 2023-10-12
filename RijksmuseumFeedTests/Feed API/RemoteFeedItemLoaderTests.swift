@@ -108,12 +108,11 @@ final class RemoteFeedItemLoaderTests: XCTestCase {
         let item = FeedItem(id: id, title: title, longTitle: longTitle, imageUrl: imageUrl, maker: principalOrFirstMaker)
         
         let json = [
-            "id": id,
+            "objectNumber": id,
             "title": title,
             "longTitle": longTitle,
             "principalOrFirstMaker": principalOrFirstMaker,
-            "webImage": ["url": imageUrl.absoluteString],
-            "headerImage": ["url": imageUrl.absoluteString]
+            "webImage": ["url": imageUrl.absoluteString]
         ].reduce(into: [String: Any]()) { (acc, e) in
             acc[e.key] = e.value
         }

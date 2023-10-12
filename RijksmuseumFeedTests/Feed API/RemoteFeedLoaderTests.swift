@@ -119,7 +119,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let item = FeedItem(id: id, title: title, longTitle: longTitle, imageUrl: imageUrl, maker: principalOrFirstMaker)
         
         let json = [
-            "id": id,
+            "objectNumber": id,
             "title": title,
             "longTitle": longTitle,
             "principalOrFirstMaker": principalOrFirstMaker,
