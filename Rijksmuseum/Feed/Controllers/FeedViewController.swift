@@ -7,7 +7,7 @@
 
 import UIKit
 
-public final class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
+public final class FeedViewController: UIViewController, UICollectionViewDelegate {
     private let refreshController: FeedRefreshViewController
     
     var dataSource: FeedDataSource?
@@ -33,7 +33,6 @@ public final class FeedViewController: UIViewController, UICollectionViewDelegat
         collectionView.collectionViewLayout = compositionalLayout
         collectionView.register(FeedItemCell.self, forCellWithReuseIdentifier: "FeedItemCell")
         collectionView.register(FeedSectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "FeedSectionHeader")
-        collectionView.prefetchDataSource = self
         collectionView.delegate = self
         collectionView.dataSource = dataSource
         
@@ -63,22 +62,8 @@ public final class FeedViewController: UIViewController, UICollectionViewDelegat
         cancelImageLoad(at: indexPath)
     }
     
-    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        indexPaths.forEach { indexPath in
-            cellController(forRowAt: indexPath)?.preload()
-        }
-    }
-    
-    func cellController(forRowAt indexPath: IndexPath) -> FeedCellController? {
-        dataSource?.itemIdentifier(for: indexPath)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        indexPaths.forEach(cancelImageLoad)
-    }
-    
     private func cancelImageLoad(at indexPath: IndexPath) {
-        cellController(forRowAt: indexPath)?.cancelLoad()
+        dataSource?.itemIdentifier(for: indexPath)?.cancelLoad()
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
