@@ -166,6 +166,17 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.requestFeedCallCount, 2)
     }
     
+    func test_feed_doesNotRenderLoadedImageWhenIsNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [makeFeedItem(title: "Test item 1", imageUrl: anyURL())])
+        
+        let view = sut.simulateFeedItemNotVisible(at: indexPath00)
+        
+        loader.completeImageLoading(with: UIColor.red.makeImage(), at: 0)
+        XCTAssertNil(view?.renderedImageData)
+    }
+    
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
@@ -270,11 +281,13 @@ private extension FeedViewController {
         feedItemView(at: indexPath) as? FeedItemCell
     }
     
-    func simulateFeedItemNotVisible(at indexPath: IndexPath) {
+    @discardableResult
+    func simulateFeedItemNotVisible(at indexPath: IndexPath) -> FeedItemCell? {
         let view = simulateFeedItemVisible(at: indexPath)
         
         let delegate = collectionView.delegate
         delegate?.collectionView?(collectionView, didEndDisplaying: view!, forItemAt: indexPath)
+        return view
     }
     
     func simulateFeedItemNearlyVisible(at indexPath: IndexPath) {

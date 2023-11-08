@@ -31,6 +31,7 @@ final class FeedCellController {
     
     func cancelLoad() {
         viewModel.cancelImageLoad()
+        viewModel.onImageLoad = nil
     }
     
     private func binded(_ cell: FeedItemCell) -> FeedItemCell {
