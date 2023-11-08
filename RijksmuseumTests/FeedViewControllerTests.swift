@@ -99,6 +99,31 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.canceledImageUrls, [item1.imageUrl, item2.imageUrl])
     }
     
+    func test_feed_rendersImageLoadedFromURL() {
+        let (sut, loader) = makeSUT()
+        let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
+        let item2 = makeFeedItem(title: "Test item 2", imageUrl: URL(string: "https://another.url")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [item1, item2])
+        let view0 = sut.simulateFeedItemVisible(at: indexPath00)
+        let view1 = sut.simulateFeedItemVisible(at: indexPath01)
+        XCTAssertEqual(view0?.renderedImageData, .none)
+        XCTAssertEqual(view1?.renderedImageData, .none)
+        
+        let image0 = UIColor.white.makeImage()
+        let thumbnail0 = image0.preparingThumbnail(of: image0.size)
+        loader.completeImageLoading(with: image0, at: 0)
+        XCTAssertEqual(view0?.renderedImageData, thumbnail0?.pngData())
+        XCTAssertEqual(view1?.imageView.image, .none)
+
+        let image1 = UIColor.red.makeImage()
+        let thumbnail1 = image1.preparingThumbnail(of: image1.size)
+        loader.completeImageLoading(with: image1, at: 1)
+        XCTAssertEqual(view0?.renderedImageData, thumbnail0?.pngData())
+        XCTAssertEqual(view1?.renderedImageData, thumbnail1?.pngData())
+    }
+
     func test_feed_rendersImageLoadedFromURLWhenFeedItemIsNearlyVisible() {
         let (sut, loader) = makeSUT()
         let item1 = makeFeedItem(title: "Test item 1", imageUrl: anyURL())
